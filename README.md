@@ -1,5 +1,5 @@
 # cps490-23f-nstiffler1
-*Description*: John Georgesen's Fall 2023 CPS 490  - Individual Repository
+*Description*: Group 4 Fall 2023 CPS 490  - Group Repository
 
 ## About
 
@@ -13,22 +13,30 @@ Instructor: Dr. Nick Stiffler
 
 # Case Study: Messenger Application
 
-## Team Members (Individual)
+## Team Members 
 
 1. John Georgesen | georgesenj1@udayton.edu
+2. Jaswant Prabhakaran | prabhakaranj1@udayton.edu
+3. |
+4. |
 
 ## Project Management Information
 
 Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
-Source code repository (private access): <https://github.com/georgesenj1/cps490-23f-georgesenj1>
+<img src="trello.png" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+
+Source code repository (private access): 
+<https://github.com/georgesenj1/cps490-23f-georgesenj1>
+<git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
+
 
 ## Revision History
 
 | Date     |   Version     |  Description    |
 |----------|:-------------:|----------------:|
 |9/12/2023 |  0.0          | Initial draft   |
-
+|9/21/2023 |  0.1          | GP Assign 1     |
 ## Overview
 
 Describe the overview of the project with a high-level architecture figure. 
@@ -40,9 +48,12 @@ Describe the overview of the project with a high-level architecture figure.
 
 List user requirements of the project that the team will develop into use cases in later steps.
 
-- Requirement 
-- Requirement 
-- Requirement
+- User can register for access 
+- User can Login 
+- user can Logout
+- Logged in user can send messege
+- Logged in user can recieve messege
+- Unregistered user cannot send or recieve messeges
 
 ### Use Cases
 
