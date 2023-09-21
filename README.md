@@ -89,6 +89,8 @@ Restriction for Unregistered User
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
+## Viable Technologies 
+
 ### Overview diagram
 
 ## System Design
