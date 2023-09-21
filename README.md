@@ -17,7 +17,7 @@ Instructor: Dr. Nick Stiffler
 
 1. John Georgesen | georgesenj1@udayton.edu
 2. Jaswant Prabhakaran | prabhakaranj1@udayton.edu
-3. |
+3. Harshita Madhavan Poonguzhali | madhavanpoonguzhalh1@udayton.edu
 4. |
 
 ## Project Management Information
@@ -28,7 +28,9 @@ Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
 Source code repository (private access): 
 <https://github.com/georgesenj1/cps490-23f-georgesenj1>
-<git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
+<https://git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
+<https://github.com/harshita-mp/cps490-23f-madhavanpoonguzhalh1>
+
 
 
 ## Revision History
