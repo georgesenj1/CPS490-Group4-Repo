@@ -91,6 +91,20 @@ Description: An unregistered user is restricted from sending or receiving messag
 
 ## Viable Technologies 
 
+Tech Stack: MESN (MongoDB, Express.js, Socket.io, Node.js)
+
+Advantages
+- It enables bidirectional communication
+- Makes simple applications such as live chat easy to implement
+- Cross browser compatibilty
+- Provides fallback for unsupported clients
+
+Disadvantages:
+- No UI components
+- Scaling applications is very difficult
+- Implementation for non-Websocket connection is complicated
+- Further support is questionable
+
 ### Overview diagram
 
 ## System Design
