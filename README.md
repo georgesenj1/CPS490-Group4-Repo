@@ -109,7 +109,7 @@ Disadvantages:
 =======
 >>>>>>> 395d63a41676ea380b2850b312a4a0679c8d9f08
 ### Overview diagram
-<img src="req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="arch.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 ## System Design
 
 ### Use-Case Realization
