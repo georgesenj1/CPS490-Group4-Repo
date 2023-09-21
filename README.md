@@ -24,7 +24,7 @@ Instructor: Dr. Nick Stiffler
 
 Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
-<img src="TrelloBoard.png" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+<img src="TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
 
