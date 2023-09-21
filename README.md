@@ -27,16 +27,11 @@ Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 <img src="TrelloBoard.png" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
-<<<<<<< HEAD
-<https://github.com/georgesenj1/cps490-23f-georgesenj1>
-<git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
-<git@github.com:akankshary/cps490-23f-yadava5.git>
-=======
+
  John: <https://github.com/georgesenj1/cps490-23f-georgesenj1>
  Jaswant: <https://git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
  Harshita: <https://github.com/harshita-mp/cps490-23f-madhavanpoonguzhalh1>
-
->>>>>>> 0cfe5be0baf7ccaaa273c518bb26afa7a7916ed3
+ Akanksha: <https://git@github.com:akankshary/cps490-23f-yadava5.git>
 
 
 ## Revision History
