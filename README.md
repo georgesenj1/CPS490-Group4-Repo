@@ -27,9 +27,16 @@ Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 <img src="trello.png" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
+<<<<<<< HEAD
 <https://github.com/georgesenj1/cps490-23f-georgesenj1>
 <git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
 <git@github.com:akankshary/cps490-23f-yadava5.git>
+=======
+ John: <https://github.com/georgesenj1/cps490-23f-georgesenj1>
+ Jaswant: <https://git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
+ Harshita: <https://github.com/harshita-mp/cps490-23f-madhavanpoonguzhalh1>
+
+>>>>>>> 0cfe5be0baf7ccaaa273c518bb26afa7a7916ed3
 
 
 ## Revision History
@@ -39,6 +46,8 @@ Source code repository (private access):
 |9/12/2023 |  0.0          | Initial draft   |
 |9/21/2023 |  0.1          | GP Assign 1     |
 ## Overview
+
+This application facilitates registered users to communicate with each other by sending and receiving messages. For security and data integrity purposes, only registered users can send or receive messages. The user registration system ensures that users have a unique identity within the platform.
 
 Describe the overview of the project with a high-level architecture figure. 
 
@@ -58,7 +67,32 @@ List user requirements of the project that the team will develop into use cases 
 
 ### Use Cases
 
-Draw the overview use case diagram, and define brief use case description for each use case.
+<img src="req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+
+Register for Access
+Actor: Unregistered User
+Description: The user provides required details, such as username, password, to create an account and gain access to the messaging system.
+
+Login
+Actor: Registered User
+Description: The user enters their username and password to access their account and utilize messaging features.
+
+Logout
+Actor: Registered User
+Description: The user opts to exit their session, ensuring their account is secure from unauthorized access.
+
+Send Message
+Actor: Registered User
+Description: The logged-in user selects a recipient, composes a message, and sends it to the chosen recipient.
+
+Receive Message
+Actor: Registered User
+Description: The logged-in user can view and open messages sent to them by other registered users.
+
+Restriction for Unregistered User
+Actor: Unregistered User
+Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
 ### Overview diagram
 
