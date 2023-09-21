@@ -91,6 +91,7 @@ Description: An unregistered user is restricted from sending or receiving messag
 
 ## Viable Technologies 
 
+<<<<<<< HEAD
 Tech Stack: MESN (MongoDB, Express.js, Socket.io, Node.js)
 
 Advantages
@@ -105,6 +106,8 @@ Disadvantages:
 - Implementation for non-Websocket connection is complicated
 - Further support is questionable
 
+=======
+>>>>>>> 395d63a41676ea380b2850b312a4a0679c8d9f08
 ### Overview diagram
 
 ## System Design
