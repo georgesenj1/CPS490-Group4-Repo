@@ -39,6 +39,8 @@ Source code repository (private access):
 |9/21/2023 |  0.1          | GP Assign 1     |
 ## Overview
 
+This application facilitates registered users to communicate with each other by sending and receiving messages. For security and data integrity purposes, only registered users can send or receive messages. The user registration system ensures that users have a unique identity within the platform.
+
 Describe the overview of the project with a high-level architecture figure. 
 
 
@@ -57,7 +59,32 @@ List user requirements of the project that the team will develop into use cases 
 
 ### Use Cases
 
-Draw the overview use case diagram, and define brief use case description for each use case.
+<img src="req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+
+Register for Access
+Actor: Unregistered User
+Description: The user provides required details, such as username, password, to create an account and gain access to the messaging system.
+
+Login
+Actor: Registered User
+Description: The user enters their username and password to access their account and utilize messaging features.
+
+Logout
+Actor: Registered User
+Description: The user opts to exit their session, ensuring their account is secure from unauthorized access.
+
+Send Message
+Actor: Registered User
+Description: The logged-in user selects a recipient, composes a message, and sends it to the chosen recipient.
+
+Receive Message
+Actor: Registered User
+Description: The logged-in user can view and open messages sent to them by other registered users.
+
+Restriction for Unregistered User
+Actor: Unregistered User
+Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
 ### Overview diagram
 
