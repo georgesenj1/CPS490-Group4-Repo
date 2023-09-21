@@ -17,7 +17,7 @@ Instructor: Dr. Nick Stiffler
 
 1. John Georgesen | georgesenj1@udayton.edu
 2. Jaswant Prabhakaran | prabhakaranj1@udayton.edu
-3. |
+3. Harshita Madhavan Poonguzhali | madhavanpoonguzhalh1@udayton.edu
 4. |
 
 ## Project Management Information
