@@ -1,12 +1,21 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-app.get('/hello', (req, res) => {
-res.send("Hello World!");
+
+app.set('view engine', 'pug');
+app.set('views','./views');
+// Route handler
+app.get('/dynamic_view', (req, res) => 
+{
+    res.render('dynamic', 
+    {
+        name: "Express Notes",
+        instructor: "Stiffler",
+        url:"https://expressjs.com/"
+    });
 });
-app.post('/hello', (req, res) => {
-res.send("You just called the post method at '/hello'!\n");
-});
-app.listen(port, () => {
-console.log(`Example app listening on port ${port}`);
+
+app.listen(port, () => 
+{
+    console.log(`Example app listening on port ${port}`);
 });
