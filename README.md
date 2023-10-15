@@ -24,7 +24,7 @@ Instructor: Dr. Nick Stiffler
 
 Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
-<img src="TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+<img src="images/TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
 
@@ -62,8 +62,8 @@ List user requirements of the project that the team will develop into use cases 
 
 ### Use Cases
 
-<img src="req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
-<img src="req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 Register for Access
 Actor: Unregistered User
@@ -109,7 +109,7 @@ Disadvantages:
 =======
 >>>>>>> 395d63a41676ea380b2850b312a4a0679c8d9f08
 ### Overview diagram
-<img src="arch.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/arch.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 ## System Design
 
 ### Use-Case Realization
@@ -122,7 +122,7 @@ _(Coming soon)_
 
 ### User Interface
 
-<img src="placeholder.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
+<img src="images/placeholder.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
 
 _(Coming soon)_
 
