@@ -90,8 +90,6 @@ Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
 ## Viable Technologies 
-
-<<<<<<< HEAD
 Tech Stack: MESN (MongoDB, Express.js, Socket.io, Node.js)
 
 Advantages
@@ -118,7 +116,7 @@ _(Coming soon)_
 
 ### Database 
 
-_(Coming soon)_
+MongoDB
 
 ### User Interface
 
@@ -148,9 +146,32 @@ Also, include a Gantt chart that reflects the timeline from the Trello board.
 
 ### Scrum Process
 
-#### Sprint x
+#### Sprint 1
 
-Duration: dd/mm/yyyy-dd/mm/yyyy
+Duration: 10/20/2023-10/31/2023
+
+#### USE-CASES:
+● A user can register for access
+● A user can login
+● A user can logout
+● A logged in user can send a message
+● A logged in user can receive a message
+● An unregistered user cannot send or receive messages
+
+#### Functional Requirements
+● A user can register for access (username & password)
+● DO NOT STORE PASSWORD IN PLAIN TEXT
+● A user can login
+● A user can logout
+● A logged-in user can access a “restricted” page/portion of the application that requires authentication.
+● A user that is not logged-in is unable to access a “restricted” page/portion of the application that requires authentication.
+
+#### What is needed
+● Multipage application
+● A page for the user to register
+● A page for the user to login
+● A page for sending and recieving messages
+Note: This could be handled by a single page application but routing to different pages seems like an easier approach at the moment
 
 ##### Completed Tasks
 
@@ -192,6 +213,3 @@ dynamics well. Mention the bullet points and discuss how to solve it.)_
 ## User Gude/Demo
 
 Write as a demo with screenshots and as a guide for users to use your system.
-
-
-# Lecture Notes
