@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+const saltRounds = 10; // Number of salting rounds for bcrypt
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -74,10 +76,20 @@ app.post('/signup', async (req, res) => {
     if (existingUser) {
         return res.render('signup', { message: 'User already exists!' });
     }
-    const newUser = new User({ id, password });
-    await newUser.save();
-    res.redirect('/login');
+    
+    // Hash the password before saving to the database
+    bcrypt.hash(password, saltRounds, async (err, hashedPassword) => {
+        if (err) {
+            console.error('Error hashing the password:', err);
+            return res.status(500).send('Internal server error');
+        }
+
+        const newUser = new User({ id, password: hashedPassword });
+        await newUser.save();
+        res.redirect('/login');
+    });
 });
+
 
 app.get('/login', (req, res) => {
     res.render('login', { message: '' });
@@ -85,13 +97,66 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     const { id, password } = req.body;
-    const user = await User.findOne({ id, password });
+    const user = await User.findOne({ id });
+    
     if (user) {
-        req.session.user = { id };
-        return res.redirect('/protected_page');
+        // Compare hashed password with the provided password
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                console.error('Error comparing the passwords:', err);
+                return res.status(500).send('Internal server error');
+            }
+
+            if (result) { // If the passwords match
+                req.session.user = { id };
+                return res.redirect('/protected_page');
+            } else {
+                res.render('login', { message: 'Invalid credentials!' });
+            }
+        });
+    } else {
+        res.render('login', { message: 'Invalid credentials!' });
     }
-    res.render('login', { message: 'Invalid credentials!' });
 });
+
+app.get('/update', checkSignIn, (req, res) => {
+    res.render('update', { message: '' });
+});
+
+app.post('/update', checkSignIn, async (req, res) => {
+    const { newId, newPassword } = req.body;
+    
+    try {
+        const user = await User.findOne({ id: req.session.user.id });
+        
+        if (!user) {
+            return res.render('update', { message: 'User not found!' });
+        }
+
+        // If the user wants to change their username, check if the new username already exists
+        if (newId && newId !== user.id) {
+            const existingUser = await User.findOne({ id: newId });
+            if (existingUser) {
+                return res.render('update', { message: 'Username already exists!' });
+            }
+            user.id = newId;
+            req.session.user.id = newId; // Update the session too
+        }
+
+        // If the user wants to change their password
+        if (newPassword) {
+            user.password = await bcrypt.hash(newPassword, saltRounds);
+        }
+
+        await user.save();
+
+        res.render('protected_page', { message: `Details updated successfully, Hi ${req.session.user.id}!` });
+    } catch (error) {
+        console.error("Error updating user's details:", error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 
 app.get('/logout', (req, res) => {
     delete req.session.user;
