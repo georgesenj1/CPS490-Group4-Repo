@@ -91,6 +91,8 @@ Description: An unregistered user is restricted from sending or receiving messag
 
 ### Overview diagram
 
+<img src="arch.jpg" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+
 ## System Design
 
 ### Use-Case Realization
