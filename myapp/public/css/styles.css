@@ -83,3 +83,25 @@ body {
         transform: translateY(-100vh);
     }
 }
+
+.delete-button {
+    background-color: #e74c3c; /* red */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* darker red */
+}
+
+.delete-form {
+    margin-top: 10px;  /* adjust this value as needed */
+}
+

@@ -157,6 +157,25 @@ app.post('/update', checkSignIn, async (req, res) => {
     }
 });
 
+app.post('/delete_account', checkSignIn, async (req, res) => {
+    try {
+        // Get the logged in user's ID
+        const userId = req.session.user.id;
+
+        // Delete the user from the database
+        await User.deleteOne({ id: userId });
+
+        // Destroy the session
+        delete req.session.user;
+
+        // Redirect to a confirmation page or home page with a success message
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).send('Error deleting account');
+    }
+});
+
 
 app.get('/logout', (req, res) => {
     delete req.session.user;
