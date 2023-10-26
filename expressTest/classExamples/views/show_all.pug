@@ -1,0 +1,12 @@
+html
+    head
+        title All Pets
+    body
+        if(type == "error")
+            h3(style = "color:red") #{message}
+    
+        else
+            h2(style = "color:blue") Below are all pets in the DB:
+            each pet in pets
+                p
+                    | name: #{pet.name} age: #{pet.age} species: #{pet.species}

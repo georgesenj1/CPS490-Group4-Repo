@@ -24,7 +24,7 @@ Instructor: Dr. Nick Stiffler
 
 Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
-<img src="TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+<img src="images/TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
 
@@ -62,8 +62,8 @@ List user requirements of the project that the team will develop into use cases 
 
 ### Use Cases
 
-<img src="req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
-<img src="req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 Register for Access
 Actor: Unregistered User
@@ -89,9 +89,22 @@ Restriction for Unregistered User
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
-### Overview diagram
+## Viable Technologies 
+Tech Stack: MESN (MongoDB, Express.js, Socket.io, Node.js)
 
-<img src="arch.jpg" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+Advantages
+- It enables bidirectional communication
+- Makes simple applications such as live chat easy to implement
+- Cross browser compatibilty
+- Provides fallback for unsupported clients
+
+Disadvantages:
+- No UI components
+- Scaling applications is very difficult
+- Implementation for non-Websocket connection is complicated
+- Further support is questionable
+
+<img src="images/arch.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 ## System Design
 
@@ -101,11 +114,11 @@ _(Coming soon)_
 
 ### Database 
 
-_(Coming soon)_
+MongoDB
 
 ### User Interface
 
-<img src="placeholder.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
+<img src="images/placeholder.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
 
 _(Coming soon)_
 
@@ -131,9 +144,32 @@ Also, include a Gantt chart that reflects the timeline from the Trello board.
 
 ### Scrum Process
 
-#### Sprint x
+#### Sprint 1
 
-Duration: dd/mm/yyyy-dd/mm/yyyy
+Duration: 10/20/2023-10/31/2023
+
+#### USE-CASES:
+● A user can register for access
+● A user can login
+● A user can logout
+● A logged in user can send a message
+● A logged in user can receive a message
+● An unregistered user cannot send or receive messages
+
+#### Functional Requirements
+● A user can register for access (username & password)
+● DO NOT STORE PASSWORD IN PLAIN TEXT
+● A user can login
+● A user can logout
+● A logged-in user can access a “restricted” page/portion of the application that requires authentication.
+● A user that is not logged-in is unable to access a “restricted” page/portion of the application that requires authentication.
+
+#### What is needed
+● Multipage application
+● A page for the user to register
+● A page for the user to login
+● A page for sending and recieving messages
+Note: This could be handled by a single page application but routing to different pages seems like an easier approach at the moment
 
 ##### Completed Tasks
 
@@ -175,6 +211,3 @@ dynamics well. Mention the bullet points and discuss how to solve it.)_
 ## User Gude/Demo
 
 Write as a demo with screenshots and as a guide for users to use your system.
-
-
-# Lecture Notes
