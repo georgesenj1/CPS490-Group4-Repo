@@ -65,15 +65,25 @@ Actor: Unregistered User
 Description: The user provides required details, such as username, password, to create an account and gain access to the messaging system.
 <img src="images/Use Case 1.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
+Sequence Diagram:
+<img src="images/Sequence Diagram 1.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
+
+
 - **Login**
 Actor: Registered User
 Description: The user enters their username and password to access their account and utilize messaging features.
 <img src="images/Use Case 2.png" style="padding: 0px 0px 0px 20px" width="1254" height="218" />
 
+Sequence Diagram:
+<img src="images/Sequence Diagram 2.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
+
 - **Logout**
 Actor: Registered User
 Description: The user opts to exit their session, ensuring their account is secure from unauthorized access.
 <img src="images/Use Case 3.png" style="padding: 0px 0px 0px 20px" width="844" height="392" />
+
+Sequence Diagram:
+<img src="images/Sequence Diagram 3.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
 - **Send Message**
 Actor: Registered User
@@ -88,10 +98,16 @@ Actor: Registered User
 Description: A registered user can access the restricted page after logging in. 
 <img src="images/Use Case 4.png" style="padding: 0px 0px 0px 20px" width="1354" height="582" />
 
+Sequence Diagram:
+<img src="images/Sequence Diagram 4.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
+
 - **Restriction for Unregistered User**
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 <img src="images/Use Case 5.png" style="padding: 0px 0px 0px 20px" width="1592" height="528" />
+
+Sequence Diagram:
+<img src="images/Sequence Diagram 5.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
 - **Update Information**
 Actor: Registered User
