@@ -60,20 +60,20 @@ List user requirements of the project that the team will develop into use cases 
 
 ### **Use Cases**
 
-<img src="images/req2.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
-<img src="images/req1.jpg" style="padding: 0px 0px 0px 20px" width="400" height="600" />
-
 - **Register for Access**
 Actor: Unregistered User
 Description: The user provides required details, such as username, password, to create an account and gain access to the messaging system.
+<img src="images/Use Case 1.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 - **Login**
 Actor: Registered User
 Description: The user enters their username and password to access their account and utilize messaging features.
+<img src="images/Use Case 2.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 - **Logout**
 Actor: Registered User
 Description: The user opts to exit their session, ensuring their account is secure from unauthorized access.
+<img src="images/Use Case 3.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 - **Send Message**
 Actor: Registered User
@@ -83,9 +83,15 @@ Description: The logged-in user selects a recipient, composes a message, and sen
 Actor: Registered User
 Description: The logged-in user can view and open messages sent to them by other registered users.
 
+- **Authorized Users can access the Restricted Page**
+Actor: Registered User
+Description: A registered user can access the restricted page after logging in. 
+<img src="images/Use Case 4.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+
 - **Restriction for Unregistered User**
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
+<img src="images/Use Case 5.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
 
 - **Update Information**
 Actor: Registered User
