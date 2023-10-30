@@ -68,12 +68,12 @@ Description: The user provides required details, such as username, password, to 
 - **Login**
 Actor: Registered User
 Description: The user enters their username and password to access their account and utilize messaging features.
-<img src="images/Use Case 2.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/Use Case 2.png" style="padding: 0px 0px 0px 20px" width="1254" height="218" />
 
 - **Logout**
 Actor: Registered User
 Description: The user opts to exit their session, ensuring their account is secure from unauthorized access.
-<img src="images/Use Case 3.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/Use Case 3.png" style="padding: 0px 0px 0px 20px" width="844" height="392" />
 
 - **Send Message**
 Actor: Registered User
@@ -86,12 +86,12 @@ Description: The logged-in user can view and open messages sent to them by other
 - **Authorized Users can access the Restricted Page**
 Actor: Registered User
 Description: A registered user can access the restricted page after logging in. 
-<img src="images/Use Case 4.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/Use Case 4.png" style="padding: 0px 0px 0px 20px" width="1354" height="582" />
 
 - **Restriction for Unregistered User**
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
-<img src="images/Use Case 5.png" style="padding: 0px 0px 0px 20px" width="400" height="600" />
+<img src="images/Use Case 5.png" style="padding: 0px 0px 0px 20px" width="1592" height="528" />
 
 - **Update Information**
 Actor: Registered User
