@@ -63,7 +63,7 @@ List user requirements of the project that the team will develop into use cases 
 - **Register for Access**
 Actor: Unregistered User
 Description: The user provides required details, such as username, password, to create an account and gain access to the messaging system.
-<img src="images/Use Case 1.png" style="padding: 0px 0px 0px 20px" width="500" height="600" />
+<img src="images/Use Case 1.png" style="padding: 0px 0px 0px 20px" width="200" height="600" />
 
 - **Login**
 Actor: Registered User
