@@ -249,27 +249,26 @@ Duration: 10/20/2023-10/31/2023
 
 #### **Sprint Retrospective**
 
-_Working through the sprints is a continuous improvement process. Discussing
-the sprint that has just completed can provide insight/retrospection that will 
-make future sprints more efficient. Sprint retrospection is done once a sprint is finished and the
-team is ready to start another sprint planning meeting. This discussion can
-take up to 1 hour depending on the team size.  Discussing
-good things happened during the sprint can improve the team's morale, good
-team-collaboration, appreciating someone who did a fantastic job to solve a
-blocker issue, work well-organized, helping someone in need. This is to improve
-the team's confidence and keep them motivated.  As a team, we can discuss what
-has gone wrong during the sprint and come-up with improvement points for the
-next sprints. Few points can be like, need to manage time well, need to
-prioritize the tasks properly and finish a task in time, incorrect design lead
-to multiple reviews and that wasted time during the sprint, team meetings were
-too long which consumed most of the effective work hours. We can mention every
-problem is in the sprint which is hindering the progress.  Finally, this
-meeting should improve your next sprint drastically and understand the team
-dynamics well. Mention the bullet points and discuss how to solve it.)_
+During this sprint, the team managed to work collaboratively, meeting most of the sprint objectives and ensuring the tasks were completed with diligence and efficiency. We were able to keep communication lines open, helping each other to overcome challenges and blockers.
 
-| Good     |   Could have been better    |  How to improve?  |
-|----------|:---------------------------:|------------------:|
-|          |                             |                   |
+**Good:**
+
+Efficient team collaboration and communication.
+Successful implementation of the planned features for the sprint.
+Timely completion of tasks.
+
+**Could have been better:**
+
+Time management could be improved to avoid crunch times.
+More rigorous initial testing could help identify bugs early.
+
+**How to improve?**
+
+Plan for more regular check-ins to ensure that everyone is on track.
+Allocate time specifically for testing to ensure that all features work as expected.
+Prioritize tasks more effectively to ensure that the most critical tasks are completed first.
+
+
 
 ## User Guide/Demo
 
