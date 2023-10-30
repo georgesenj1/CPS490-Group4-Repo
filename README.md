@@ -15,10 +15,9 @@ Instructor: Dr. Nick Stiffler
 
 ## Team Members 
 
-1. John Georgesen | georgesenj1@udayton.edu
-2. Jaswant Prabhakaran | prabhakaranj1@udayton.edu
-3. Harshita Madhavan Poonguzhali | madhavanpoonguzhalh1@udayton.edu
-4. Akanksha Yadav | yadava5@udayton.edu
+1. Jaswant Prabhakaran | prabhakaranj1@udayton.edu
+2. Harshita Madhavan Poonguzhali | madhavanpoonguzhalh1@udayton.edu
+3. Akanksha Yadav | yadava5@udayton.edu
 
 ## Project Management Information
 
@@ -28,7 +27,6 @@ Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
 Source code repository (private access): 
 
- John: <https://github.com/georgesenj1/cps490-23f-georgesenj1>
  Jaswant: <https://git@github.com:BiologyLab/cps490-23f-prabhakaranj1.git>
  Harshita: <https://github.com/harshita-mp/cps490-23f-madhavanpoonguzhalh1>
  Akanksha: <https://git@github.com:akankshary/cps490-23f-yadava5.git>
@@ -40,12 +38,10 @@ Source code repository (private access):
 |----------|:-------------:|----------------:|
 |9/12/2023 |  0.0          | Initial draft   |
 |9/21/2023 |  0.1          | GP Assign 1     |
+|10/30/2023|  1.0          | App Version 1   |
 ## Overview
 
 This application facilitates registered users to communicate with each other by sending and receiving messages. For security and data integrity purposes, only registered users can send or receive messages. The user registration system ensures that users have a unique identity within the platform.
-
-Describe the overview of the project with a high-level architecture figure. 
-
 
 ## System Analysis
 
@@ -59,6 +55,8 @@ List user requirements of the project that the team will develop into use cases 
 - Logged in user can send messege
 - Logged in user can recieve messege
 - Unregistered user cannot send or recieve messeges
+- Logged in user can update username and password
+- Logged in user can delete account
 
 ### Use Cases
 
@@ -89,6 +87,14 @@ Restriction for Unregistered User
 Actor: Unregistered User
 Description: An unregistered user is restricted from sending or receiving messages. They must first register and login to access messaging features.
 
+Update Information
+Actor: Registered User
+Description: A logged in user can update their information (username & password)
+
+Account Deletion 
+Actor: Registered User
+Descritption: A logged in user can request account deletion
+
 ## Viable Technologies 
 Tech Stack: MESN (MongoDB, Express.js, Socket.io, Node.js)
 
@@ -118,18 +124,67 @@ MongoDB
 
 ### User Interface
 
-<img src="images/placeholder.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
-
-_(Coming soon)_
+<img src="images/userinterphase.png" style="padding: 0px 0px 0px 20px" width="200" height="200" />
 
 ## Implementation
 
-For each new sprint cycle, update the implementation of your system (break it
-down into subsections). It is helpful if you can include some code snippets to
-illustrate the implementation.
+Of course, let's align the structure with the details you've provided:
 
-Specify the development approach of your team, including programming languages,
-database, development, testing, and deployment environments. 
+---
+
+### **Implementation**
+
+#### **Sprint Cycle [e.g., 1]**
+
+##### **Features Implemented:**
+
+- **User Registration:**
+  We implemented a user registration feature where users can sign up for access. This was done using Node.js to handle the backend logic and Pug for the frontend rendering.
+  ```javascript
+  // Code snippet illustrating key parts of User Registration
+  ```
+
+- **User Login:**
+  Enabled users to securely login using their registered credentials. Again, Node.js was crucial for handling the authentication process, with Pug templates creating the user interface.
+  ```javascript
+  // Code snippet illustrating key parts of User Login
+  ```
+
+- **User Logout:**
+  Users have the ability to log out, ensuring a secure end to their session.
+  ```javascript
+  // Code snippet illustrating User Logout functionality
+  ```
+
+- **Update Username and Password:**
+  For better user experience, we ensured that logged-in users can update their username and password. This was implemented with a combination of Node.js functions and Pug templates for the frontend display.
+  ```javascript
+  // Code snippet illustrating Update functionality
+  ```
+
+- **Account Deletion:**
+  To ensure user agency and data privacy, we added a feature that allows users to delete their accounts. This process was handled securely using Node.js, and Pug was used to present the user with confirmation prompts.
+  ```javascript
+  // Code snippet illustrating Account Deletion process
+  ```
+
+---
+
+### **Development Approach**
+
+#### **Programming Languages and Tools:**
+
+- **Pug:** 
+  - **Usage:** We employed Pug as our templating engine. This allowed us to efficiently render HTML content and create a dynamic frontend.
+  - **Advantages:** Pug offers a concise way to write templates, allowing for better readability and maintainability.
+
+- **Node.js:** 
+  - **Usage:** Node.js served as the backbone of our application, providing the environment to run our JavaScript code server-side. This facilitated functionalities like user registration, login, updating credentials, and account deletion.
+  - **Advantages:** Node.js offers an event-driven architecture capable of asynchronous I/O. This means our application is both scalable and can handle multiple simultaneous connections with high throughput.
+
+---
+
+Using this structure, we've organized the features you mentioned under a single sprint cycle. You can expand upon this as needed, add code snippets to illustrate the functionalities, and adjust the sprint cycle number accordingly.
 
 ### Deployment
 
@@ -208,6 +263,6 @@ dynamics well. Mention the bullet points and discuss how to solve it.)_
 |----------|:---------------------------:|------------------:|
 |          |                             |                   |
 
-## User Gude/Demo
+## User Guide/Demo
 
 Write as a demo with screenshots and as a guide for users to use your system.
