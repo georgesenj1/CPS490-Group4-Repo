@@ -273,23 +273,27 @@ Duration: 10/20/2023-10/31/2023
 
 During this sprint, the team managed to work collaboratively, meeting most of the sprint objectives and ensuring the tasks were completed with diligence and efficiency. We were able to keep communication lines open, helping each other to overcome challenges and blockers.
 
-**Good:**
+**Good**:
 
-Efficient team collaboration and communication.
-Successful implementation of the planned features for the sprint.
-Timely completion of tasks.
+Technical Selection: The combination of Node.js, Express, and Pug turned out to be beneficial. It allowed rapid development, facilitated server-client interactions, and rendered dynamic content efficiently.
 
-**Could have been better:**
+Responsive Design: Our use of CSS ensured that the application was user-friendly and adaptable to various screen sizes.
 
-Time management could be improved to avoid crunch times.
-More rigorous initial testing could help identify bugs early.
+Functionality: The features like registration, login, and account management (update and delete) were implemented seamlessly, enhancing user experience.
 
-**How to improve?**
+**Could have been better**:
 
-Plan for more regular check-ins to ensure that everyone is on track.
-Allocate time specifically for testing to ensure that all features work as expected.
-Prioritize tasks more effectively to ensure that the most critical tasks are completed first.
+Error Handling: While we did manage error messages effectively, there's always room for improvement in providing users with more detailed feedback.
 
+Scalability: As the application grows, we may need to consider optimizing our Node.js server and possibly integrating more advanced database solutions for user management.
+
+**How to improve**
+
+Extend Tech Stack: Introduce more middleware in Express.js for better error handling and more efficient route management.
+
+Enhanced Testing: Introduce automated testing tools specific to Node.js and Pug to ensure that every functionality works flawlessly before deployment.
+
+Refined Styling: Further refine the CSS to ensure more responsiveness and introduce themes for users in the future.
 
 
 ## User Guide/Demo
