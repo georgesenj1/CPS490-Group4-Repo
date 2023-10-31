@@ -23,7 +23,7 @@ Instructor: Dr. Nick Stiffler
 
 Management board (private access): <https://trello.com/b/SYB8SzCg/capstone-1>
 
-<img src="images/TrelloBoard.PNG" style="padding: 0px 0px 0px 20px" width="400" height="200" />
+<img src="images/TrelloBoard.png" style="padding: 0px 0px 0px 20px" width="400" height="200" />
 
 Source code repository (private access): 
 
@@ -226,10 +226,7 @@ Some applications may require additional configurations, like linking to databas
 
 ### **Software Process Management**
 
-Include the Trello board with product backlog and sprint cycles in an overview
-figure.
-
-Also, include a Gantt chart that reflects the timeline from the Trello board.
+<img src="images/gantt diagram.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
 ### **Scrum Process**
 
@@ -270,44 +267,6 @@ Duration: 10/20/2023-10/31/2023
 3.  Akanksha, 15 hours, contributed in Code, Documentation
 
 #### **Sprint Retrospective**
-
-#### USE-CASES:
-● A user can register for access
-● A user can login
-● A user can logout
-● A logged in user can send a message
-● A logged in user can receive a message
-● An unregistered user cannot send or receive messages
-
-#### Functional Requirements
-● A user can register for access (username & password)
-● DO NOT STORE PASSWORD IN PLAIN TEXT
-● A user can login
-● A user can logout
-● A logged-in user can access a “restricted” page/portion of the application that requires authentication.
-● A user that is not logged-in is unable to access a “restricted” page/portion of the application that requires authentication.
-
-#### What is needed
-● Multipage application
-● A page for the user to register
-● A page for the user to login
-● A page for sending and recieving messages
-Note: This could be handled by a single page application but routing to different pages seems like an easier approach at the moment
-
-##### Completed Tasks
-
-1. Task 1
-2. Task 2
-3. ...
-
-##### Contributions:
-
-1.  Member 1, x hours, contributed in xxx
-2.  Member 2, x hours, contributed in xxx
-3.  Member 3, x hours, contributed in xxx
-4.  Member 4, x hours, contributed in xxx
-
-##### Sprint Retrospective
 
 During this sprint, the team managed to work collaboratively, meeting most of the sprint objectives and ensuring the tasks were completed with diligence and efficiency. We were able to keep communication lines open, helping each other to overcome challenges and blockers.
 
