@@ -1,0 +1,20 @@
+doctype html
+html
+    head
+        title Signup
+        link(rel="stylesheet" href="/css/styles.css")  
+    body
+        .container
+            h1 Signup
+            p= message
+            form.signup-form(action='/signup' method='post')
+                input(type='text' name='id' placeholder='Username')
+                input(type='password' name='password' placeholder='Password' class='input-spacing')
+                input.button(type='submit' value='Signup')
+            button.button.button-space(onclick="location.href='/login'") Go Back
+
+
+        //- Bubbles for aesthetics
+        .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+        .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+        .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
