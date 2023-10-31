@@ -112,10 +112,18 @@ Sequence Diagram:
 - **Update Information**
 Actor: Registered User
 Description: A logged in user can update their information (username & password)
+<img src="images/Use Case 6.png" style="padding: 0px 0px 0px 20px" width="844" height="392" />
+
+Sequence Diagram:
+<img src="images/Sequence Diagram 6.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
 - **Account Deletion** 
 Actor: Registered User
 Descritption: A logged in user can request account deletion
+<img src="images/Use Case 7.png" style="padding: 0px 0px 0px 20px" width="844" height="392" />
+
+Sequence Diagram:
+<img src="images/Sequence Diagram 7.png" style="padding: 0px 0px 0px 20px" width="1304" height="450" />
 
 ## **Viable Technologies** 
 **Tech Stack**: MESN (MongoDB, Express.js, Socket.io, Node.js)
