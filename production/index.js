@@ -11,7 +11,7 @@ const session = require('express-session');
 const { User } = require('./models'); // Import the User model
 
 // Define the PORT variable
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT ;
 
 // Other middleware, routes, etc.
 
