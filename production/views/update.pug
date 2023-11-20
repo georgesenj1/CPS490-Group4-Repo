@@ -1,0 +1,19 @@
+doctype html
+html
+    head
+        title Update Details
+        link(rel="stylesheet" href="/css/styles.css")
+    body
+        .container
+            h1 Update Details
+            p= message
+            form.update-form(action='/update' method='post')
+                input(type='text' name='newId' placeholder='New Username')
+                input(type='password' name='newPassword' placeholder='New Password' class='input-spacing')
+                input.button(type='submit' value='Update')
+            button.button.button-space(onclick="location.href='/protected_page'") Back
+
+        //- Bubbles for aesthetics
+        .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+        .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+        .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
