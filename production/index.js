@@ -11,35 +11,21 @@ const session = require('express-session');
 const { User } = require('./models'); // Import the User model
 
 // Define the PORT variable
-const PORT = process.env.PORT ;
-
-// Other middleware, routes, etc.
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
-
-
-  
-
+const PORT = process.env.PORT || 3001;
 
 // MongoDB Connection
 const uname = 'prabhakaranj1';
 const pword = encodeURIComponent('prabhakaranj1');
 const cluster = 'cluster0.kifx1pt';
 const dbname = 'test';
-
 const uri = `mongodb+srv://${uname}:${pword}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`;
 
 const mongoose_settings = { useNewUrlParser: true, useUnifiedTopology: true };
-
 mongoose.connect(uri, mongoose_settings).catch(err => {
     console.error("Failed to connect to MongoDB:", err.message);
 });
 
 const db = mongoose.connection;
-
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", () => {
     console.log("Connected successfully to MongoDB");
@@ -55,6 +41,7 @@ app.use(upload.array());
 app.use(cookieParser());
 app.use(session({ secret: "YourSecretPhraseHere", resave: true, saveUninitialized: true }));
 
+// Middleware and routes
 const checkSignIn = (req, res, next) => {
     if(req.session.user){
         return next();
@@ -77,6 +64,7 @@ app.use((req, res, next) => {
     }
     next();
 });
+
 
 app.get('/signup', (req, res) => {
     res.render('signup', { message: '' });
@@ -203,5 +191,5 @@ app.use('/protected_page', (err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`App listening at http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
