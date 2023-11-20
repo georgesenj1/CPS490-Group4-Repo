@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10; // Number of salting rounds for bcrypt
 const express = require('express');
+const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
@@ -9,10 +10,17 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { User } = require('./models'); // Import the User model
 
+// Define the PORT variable
 const PORT = process.env.PORT || 3001;
+
+// Other middleware, routes, etc.
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
+
+  
 
 
 // MongoDB Connection
