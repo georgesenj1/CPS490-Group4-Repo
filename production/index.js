@@ -202,6 +202,6 @@ app.use('/protected_page', (err, req, res, next) => {
     res.redirect('/login');
 });
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`App listening at http://localhost:${PORT}`);
 });
