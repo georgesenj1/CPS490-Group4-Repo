@@ -9,8 +9,11 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const { User } = require('./models'); // Import the User model
 
-const app = express();
-const port = 3001;
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 
 // MongoDB Connection
 const uname = 'prabhakaranj1';
