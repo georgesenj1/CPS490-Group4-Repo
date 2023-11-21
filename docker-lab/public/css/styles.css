@@ -1,0 +1,107 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2d3436; /* Changed the background to the dark shade for bubbles effect */
+    overflow: hidden;
+    color: #dfe6e9;
+}
+
+/* Targeting the <p> elements inside .container class to darken the text */
+.container p {
+    color: #333;  /* Using a darker shade of grey. You can adjust as needed. */
+}
+
+/* If you specifically want to target only the message paragraph, you can add a class to it in your Pug template, e.g., .message-text, and then style it in your CSS: */
+.message-text {
+    color: #333;
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+.container h1 {
+    color: #2c3e50;  /* Darker shade */
+}
+
+.button {
+    display: block;
+    background-color: #1877f2; /* Facebook blue */
+    color: white;
+    padding: 10px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.button + .button {
+    margin-top: 10px;
+}
+
+.input-spacing {
+    margin-bottom: 20px;
+}
+
+
+
+.button-space {
+    margin-top: 10px;
+}
+
+
+
+.button:hover {
+    background-color: #165dbb;
+}
+
+/* Bubbles styles */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    animation: bubbleAnimation infinite;
+    bottom: -10%;
+}
+
+@keyframes bubbleAnimation {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100vh);
+    }
+}
+
+.delete-button {
+    background-color: #e74c3c; /* red */
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #c0392b; /* darker red */
+}
+
+.delete-form {
+    margin-top: 10px;  /* adjust this value as needed */
+}
+

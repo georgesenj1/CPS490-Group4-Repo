@@ -10,7 +10,7 @@ const session = require('express-session');
 const { User } = require('./models'); // Import the User model
 
 const app = express();
-const port = 3001;
+const port = 3003;
 
 // MongoDB Connection
 const uname = 'prabhakaranj1';
