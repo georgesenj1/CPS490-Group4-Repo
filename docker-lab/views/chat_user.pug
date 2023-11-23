@@ -1,0 +1,69 @@
+doctype html
+html
+  head
+    title Chat with #{user.id}
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body
+    .container
+      h1 Chat with #{user.id}
+
+      // Chat messages
+      ul#chat-messages
+        if chatMessages
+          each message in chatMessages
+            li= message.sender + ": " + message.message
+        else
+          li No chat messages available
+
+      // Message input and send button
+      form#chat-form(action="#" method="post") // Update action attribute
+        input(type="text" id="message-input" placeholder="Type a message")
+        button(type="submit") Send
+
+      // Back to Chat Page button
+      button.button(onclick="location.href='/chat'") Back to Chat
+
+  // Include Socket.io script outside the body tag
+  script(src="/socket.io/socket.io.js")
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      var socket = io(); // This line connects to the Socket.io server
+      var userId = "#{user.id}";
+      var senderUserId = "#{session.user.id}";
+
+      // Function to display a chat message
+      function displayMessage(sender, message) {
+        var chatMessages = document.getElementById('chat-messages');
+        var messageItem = document.createElement('li');
+        messageItem.textContent = sender + ": " + message;
+        chatMessages.appendChild(messageItem);
+      }
+
+      // Handle form submission (sending messages)
+      var chatForm = document.getElementById('chat-form');
+      var messageInput = document.getElementById('message-input');
+      
+      chatForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var messageText = messageInput.value.trim(); // Trim whitespace
+        if (messageText) {
+          // Emit the chat message to the server
+          socket.emit('chatMessage', { senderUserId, receiverUserId: userId, text: messageText });
+
+          // Display the sent message in the chat window
+          displayMessage('You', messageText);
+
+          // Clear the message input
+          messageInput.value = '';
+        }
+      });
+
+      // Handle incoming chat messages from the server
+      socket.on('chatMessage', function (message) {
+        // Display the received message in the chat window
+        displayMessage(message.senderUserId, message.text);
+      });
+
+      // You can add more chat functionality here, such as handling user typing indicators, message history, etc.
+    });

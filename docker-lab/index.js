@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const saltRounds = 10; // Number of salting rounds for bcrypt
+const saltRounds = 10;
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -8,30 +8,26 @@ const multer = require('multer');
 const upload = multer();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { User } = require('./models'); // Import the User model
+const { User, Chat } = require('./models'); // Import the Chat model
+const http = require('http'); // Import the 'http' module
+const server = http.createServer(app); // Create an HTTP server
+const io = require('socket.io')(server); // Set up Socket.io
 
-// Define the PORT variable
 const PORT = process.env.PORT || 3001;
 
-// MongoDB Connection
+// MongoDB Connection - Should use environment variables for credentials
 const uname = 'prabhakaranj1';
 const pword = encodeURIComponent('prabhakaranj1');
 const cluster = 'cluster0.kifx1pt';
 const dbname = 'test';
 const uri = `mongodb+srv://${uname}:${pword}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`;
 
-const mongoose_settings = { useNewUrlParser: true, useUnifiedTopology: true };
-mongoose.connect(uri, mongoose_settings).catch(err => {
-    console.error("Failed to connect to MongoDB:", err.message);
-});
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .catch(err => console.error("Failed to connect to MongoDB:", err.message));
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error: "));
-db.once("open", () => {
-    console.log("Connected successfully to MongoDB");
-});
+mongoose.connection.on("error", console.error.bind(console, "connection error: "));
+mongoose.connection.once("open", () => console.log("Connected successfully to MongoDB"));
 
-// Express Configuration
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
@@ -39,18 +35,61 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.array());
 app.use(cookieParser());
-app.use(session({ secret: "YourSecretPhraseHere", resave: true, saveUninitialized: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET, 
+    resave: true, 
+    saveUninitialized: true
+}));
 
-// Middleware and routes
+// Middleware for checking if the user is logged in
 const checkSignIn = (req, res, next) => {
-    if(req.session.user){
+    if (req.session.user) {
         return next();
     } else {
         const err = new Error("Not logged in!");
         err.status = 400;
-        return next(err);
+        next(err);
     }
 };
+
+// Create an object to store user-to-socket mappings
+const userSockets = {};
+
+// Socket.io setup
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Handle incoming chat messages
+    socket.on('chatMessage', async (message) => {
+        try {
+            // Broadcast the message to all connected clients, including the sender
+            io.emit('chatMessage', message);
+
+            // Save the message to the database
+            const newMessage = new Chat({
+                sender: message.senderUserId,
+                receiver: message.receiverUserId,
+                message: message.text,
+            });
+            await newMessage.save();
+        } catch (error) {
+            console.error('Error handling chat message:', error);
+        }
+    });
+
+    // Handle user disconnection
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+
+        // Remove the user's entry from the userSockets object
+        for (const [userId, socketId] of Object.entries(userSockets)) {
+            if (socketId === socket.id) {
+                delete userSockets[userId];
+                break;
+            }
+        }
+    });
+});
 
 app.get('/', (req, res) => {
     res.render('home');
@@ -65,31 +104,65 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.get('/signup', (req, res) => {
     res.render('signup', { message: '' });
 });
 
 app.post('/signup', async (req, res) => {
-    const { id, password } = req.body;
-    const existingUser = await User.findOne({ id });
-    if (existingUser) {
-        return res.render('signup', { message: 'User already exists!' });
-    }
-    
-    // Hash the password before saving to the database
-    bcrypt.hash(password, saltRounds, async (err, hashedPassword) => {
-        if (err) {
-            console.error('Error hashing the password:', err);
-            return res.status(500).send('Internal server error');
+    try {
+        const { id, password } = req.body;
+        const existingUser = await User.findOne({ id });
+        if (existingUser) {
+            return res.render('signup', { message: 'User already exists!' });
         }
 
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         const newUser = new User({ id, password: hashedPassword });
         await newUser.save();
         res.redirect('/login');
-    });
+    } catch (err) {
+        console.error('Error in /signup:', err);
+        res.status(500).render('signup', { message: 'Internal server error' });
+    }
 });
 
+app.post('/send-message', checkSignIn, async (req, res) => {
+    try {
+        const { receiverUserId, text } = req.body;
+        const senderUserId = req.session.user.id; // Get sender's user ID from session
+
+        console.log('Sender:', senderUserId);
+        console.log('Receiver:', receiverUserId);
+        console.log('Message:', text);
+
+        // Create a new chat message document
+        const newMessage = new Chat({
+            sender: senderUserId,
+            receiver: receiverUserId,
+            message: text,
+        });
+
+        // Save the message to the database
+        await newMessage.save();
+
+        // Store the sender's socket ID in the userSockets object
+        userSockets[senderUserId] = req.session.socketId;
+
+        // Get the receiver's socket ID from the userSockets object
+        const receiverSocketId = userSockets[receiverUserId];
+
+        // Emit the chat message to the receiver using Socket.io
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('chatMessage', newMessage);
+        }
+
+        // Respond with a success message
+        res.status(200).send('Message sent successfully');
+    } catch (error) {
+        console.error('Error sending message:', error);
+        res.status(500).send('Error sending message');
+    }
+});
 
 app.get('/login', (req, res) => {
     res.render('login', { message: '' });
@@ -98,7 +171,7 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     const { id, password } = req.body;
     const user = await User.findOne({ id });
-    
+
     if (user) {
         // Compare hashed password with the provided password
         bcrypt.compare(password, user.password, (err, result) => {
@@ -109,6 +182,7 @@ app.post('/login', async (req, res) => {
 
             if (result) { // If the passwords match
                 req.session.user = { id };
+                req.session.socketId = req.sessionID; // Store the socket ID in the session
                 return res.redirect('/protected_page');
             } else {
                 res.render('login', { message: 'Invalid credentials!' });
@@ -119,68 +193,59 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/update', checkSignIn, (req, res) => {
-    res.render('update', { message: '' });
+app.get('/chat', async (req, res) => {
+    try {
+        // Fetch a list of users from the database
+        const users = await User.find({}, 'id'); // Fetch only the 'id' field
+
+        // Render the chat page and pass the list of users to the template
+        res.render('chat', { users });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-app.post('/update', checkSignIn, async (req, res) => {
-    const { newId, newPassword } = req.body;
-    
+app.get('/chat/:userId', checkSignIn, async (req, res) => {
     try {
-        const user = await User.findOne({ id: req.session.user.id });
-        
+        const { userId } = req.params;
+
+        // Fetch the user details for the selected user
+        const user = await User.findOne({ id: userId });
+
         if (!user) {
-            return res.render('update', { message: 'User not found!' });
+            return res.status(404).send('User not found');
         }
 
-        // If the user wants to change their username, check if the new username already exists
-        if (newId && newId !== user.id) {
-            const existingUser = await User.findOne({ id: newId });
-            if (existingUser) {
-                return res.render('update', { message: 'Username already exists!' });
-            }
-            user.id = newId;
-            req.session.user.id = newId; // Update the session too
-        }
-
-        // If the user wants to change their password
-        if (newPassword) {
-            user.password = await bcrypt.hash(newPassword, saltRounds);
-        }
-
-        await user.save();
-
-        res.render('protected_page', { message: `Details updated successfully, Hi ${req.session.user.id}!` });
-    } catch (error) {
-        console.error("Error updating user's details:", error);
-        res.status(500).send('Internal server error');
+        // Render the chat_user page with the selected user's details and user session information
+        res.render('chat_user', { user, session: req.session });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
 });
 
-app.post('/delete_account', checkSignIn, async (req, res) => {
+// Define a route to handle user searches
+app.get('/search', async (req, res) => {
     try {
-        // Get the logged in user's ID
-        const userId = req.session.user.id;
+        const { query } = req.query; // Get the user's search query
 
-        // Delete the user from the database
-        await User.deleteOne({ id: userId });
+        // Fetch users that match the search query
+        const users = await User.find({ id: { $regex: query, $options: 'i' } }, 'id');
 
-        // Destroy the session
-        delete req.session.user;
-
-        // Redirect to a confirmation page or home page with a success message
-        res.redirect('/');
-    } catch (error) {
-        console.error('Error deleting account:', error);
-        res.status(500).send('Error deleting account');
+        // Render the chat page with the search results
+        res.render('chat', { users, query });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
 });
-
 
 app.get('/logout', (req, res) => {
     delete req.session.user;
     res.redirect('/login');
 });
+
 
 app.get('/protected_page', checkSignIn, (req, res) => {
     res.render('protected_page', { message: `Hi, ${req.session.user.id}!` });
@@ -190,6 +255,6 @@ app.use('/protected_page', (err, req, res, next) => {
     res.redirect('/login');
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

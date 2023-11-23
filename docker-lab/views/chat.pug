@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    title Chat Page
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body
+    .container
+      h1 Chat Page
+
+      // Add a search bar
+      form.search-form(action="/search", method="get")
+        input(type="text" name="query" placeholder="Search for users" value=query)
+        button(type="submit") Search
+
+      ul
+        each user in users
+          li
+            a(href=`/chat/${user.id}`)= user.id
+
+      // Add a back button to return to the protected page
+      button.button(onclick="location.href='/protected_page'") Back to Protected Page
+
+      // ... other content ...
