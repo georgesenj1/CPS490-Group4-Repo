@@ -59,29 +59,37 @@ const userSockets = {};
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Handle incoming chat messages
-    socket.on('chatMessage', async (message) => {
-        try {
-            // Broadcast the message to all connected clients, including the sender
-            io.emit('chatMessage', message);
-
-            // Save the message to the database
-            const newMessage = new Chat({
-                sender: message.senderUserId,
-                receiver: message.receiverUserId,
-                message: message.text,
-            });
-            await newMessage.save();
-        } catch (error) {
-            console.error('Error handling chat message:', error);
-        }
+    // Store the user's ID and socket ID mapping
+    socket.on('registerUser', (userId) => {
+        userSockets[userId] = socket.id;
     });
+
+    // Handle incoming chat messages
+socket.on('chatMessage', async (message) => {
+    try {
+        // Use the string IDs directly without converting to ObjectIds
+        const newMessage = new Chat({
+            sender: message.senderUserId, // these are the unique string IDs
+            receiver: message.receiverUserId,
+            message: message.text,
+        });
+        await newMessage.save();
+        console.log('Message saved:', newMessage);
+
+        const receiverSocketId = userSockets[message.receiverUserId];
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('chatMessage', newMessage);
+        }
+    } catch (error) {
+        console.error('Error handling chat message:', error);
+    }
+});
+
+    
 
     // Handle user disconnection
     socket.on('disconnect', () => {
         console.log('A user disconnected');
-
-        // Remove the user's entry from the userSockets object
         for (const [userId, socketId] of Object.entries(userSockets)) {
             if (socketId === socket.id) {
                 delete userSockets[userId];
@@ -161,6 +169,24 @@ app.post('/send-message', checkSignIn, async (req, res) => {
     } catch (error) {
         console.error('Error sending message:', error);
         res.status(500).send('Error sending message');
+    }
+});
+
+app.get('/get-messages', async (req, res) => {
+    const { senderId, receiverId } = req.query;
+
+    try {
+        const messages = await Chat.find({
+            $or: [
+                { sender: senderId, receiver: receiverId },
+                { sender: receiverId, receiver: senderId }
+            ]
+        }).sort({ timestamp: 1 }); // Sort by timestamp to get messages in order
+
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 

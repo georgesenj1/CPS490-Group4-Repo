@@ -10,14 +10,10 @@ html
 
       // Chat messages
       ul#chat-messages
-        if chatMessages
-          each message in chatMessages
-            li= message.sender + ": " + message.message
-        else
-          li No chat messages available
+        // Chat messages will be populated here
 
       // Message input and send button
-      form#chat-form(action="#" method="post") // Update action attribute
+      form#chat-form(action="#" method="post")
         input(type="text" id="message-input" placeholder="Type a message")
         button(type="submit") Send
 
@@ -39,6 +35,26 @@ html
         messageItem.textContent = sender + ": " + message;
         chatMessages.appendChild(messageItem);
       }
+
+      // Function to fetch and display chat history
+      function fetchAndDisplayChatHistory() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/get-messages?senderId=' + senderUserId + '&receiverId=' + userId, true);
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var messages = JSON.parse(xhr.responseText);
+            messages.forEach(function(message) {
+              displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
+            });
+          } else {
+            console.error('Error fetching chat history:', xhr.statusText);
+          }
+        };
+        xhr.send();
+      }
+
+      // Call this function when the page loads
+      fetchAndDisplayChatHistory();
 
       // Handle form submission (sending messages)
       var chatForm = document.getElementById('chat-form');
@@ -65,5 +81,5 @@ html
         displayMessage(message.senderUserId, message.text);
       });
 
-      // You can add more chat functionality here, such as handling user typing indicators, message history, etc.
+      // Additional chat functionality can be added here
     });
