@@ -24,9 +24,12 @@ html
   script(src="/socket.io/socket.io.js")
   script.
     document.addEventListener('DOMContentLoaded', function () {
-      var socket = io(); // This line connects to the Socket.io server
-      var userId = "#{user.id}";
-      var senderUserId = "#{session.user.id}";
+      var socket = io(); // Connects to the Socket.io server
+      var userId = "#{user.id}"; // ID of the user you are chatting with
+      var senderUserId = "#{session.user.id}"; // ID of the logged-in user
+
+      // Register the sender with the server
+      socket.emit('registerUser', senderUserId);
 
       // Function to display a chat message
       function displayMessage(sender, message) {
@@ -59,7 +62,7 @@ html
       // Handle form submission (sending messages)
       var chatForm = document.getElementById('chat-form');
       var messageInput = document.getElementById('message-input');
-      
+
       chatForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var messageText = messageInput.value.trim(); // Trim whitespace
@@ -77,9 +80,9 @@ html
 
       // Handle incoming chat messages from the server
       socket.on('chatMessage', function (message) {
-        // Display the received message in the chat window
-        displayMessage(message.senderUserId, message.text);
+        if (message.sender === senderUserId || message.receiver === senderUserId) {
+          // Display the received message in the chat window
+          displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
+        }
       });
-
-      // Additional chat functionality can be added here
     });

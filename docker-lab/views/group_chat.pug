@@ -1,0 +1,20 @@
+h1 Group Chat: #{groupChat.groupName}
+
+// Display group chat messages here
+
+// Add a search bar
+form.search-form(action="/group-chat/:groupId/add-user", method="post")
+  input(type="text" name="username" placeholder="Enter username")
+  button(type="submit") Add User to Group
+
+ul
+  if users && users.length
+    each user in users
+      li
+        a(href=`/chat/${user.id}`)= user.id
+  else
+    li No users found
+
+
+// Add a back button to return to the protected page
+button.button(onclick="location.href='/protected_page'") Back to Protected Page

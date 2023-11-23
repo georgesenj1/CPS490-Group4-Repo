@@ -54,50 +54,49 @@ const checkSignIn = (req, res, next) => {
 
 // Create an object to store user-to-socket mappings
 const userSockets = {};
+// ... [Rest of your existing server-side code] ...
 
 // Socket.io setup
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Store the user's ID and socket ID mapping
     socket.on('registerUser', (userId) => {
         userSockets[userId] = socket.id;
+        console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
     });
 
-    // Handle incoming chat messages
-socket.on('chatMessage', async (message) => {
-    try {
-        // Use the string IDs directly without converting to ObjectIds
-        const newMessage = new Chat({
-            sender: message.senderUserId, // these are the unique string IDs
-            receiver: message.receiverUserId,
-            message: message.text,
-        });
-        await newMessage.save();
-        console.log('Message saved:', newMessage);
+    socket.on('chatMessage', async (message) => {
+        try {
+            const newMessage = new Chat({
+                sender: message.senderUserId,
+                receiver: message.receiverUserId,
+                message: message.text,
+            });
+            await newMessage.save();
+            console.log('Message saved:', newMessage);
 
-        const receiverSocketId = userSockets[message.receiverUserId];
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit('chatMessage', newMessage);
+            const receiverSocketId = userSockets[message.receiverUserId];
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit('chatMessage', newMessage);
+            }
+        } catch (error) {
+            console.error('Error handling chat message:', error);
         }
-    } catch (error) {
-        console.error('Error handling chat message:', error);
-    }
-});
+    });
 
-    
-
-    // Handle user disconnection
     socket.on('disconnect', () => {
-        console.log('A user disconnected');
         for (const [userId, socketId] of Object.entries(userSockets)) {
             if (socketId === socket.id) {
                 delete userSockets[userId];
+                console.log(`User disconnected: ${userId}`);
                 break;
             }
         }
     });
 });
+
+// ... [Rest of your existing server-side code] ...
+
 
 app.get('/', (req, res) => {
     res.render('home');
