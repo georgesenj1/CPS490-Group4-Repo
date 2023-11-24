@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { User, Chat } = require('./models'); // Import the Chat model
+const { User, Chat, Group } = require('./models'); // Import the Chat model
 const http = require('http'); // Import the 'http' module
 const server = http.createServer(app); // Create an HTTP server
 const io = require('socket.io')(server); // Set up Socket.io
@@ -81,6 +81,33 @@ io.on('connection', (socket) => {
             }
         } catch (error) {
             console.error('Error handling chat message:', error);
+        }
+    });
+
+    // Inside io.on('connection', (socket) => { ... });
+
+    socket.on('groupChatMessage', async (message) => {
+        try {
+            // Find the group by its ID
+            const group = await Group.findById(message.groupId);
+
+            // Save the message with a reference to the group
+            const newMessage = new Chat({
+                sender: message.senderUserId,
+                message: message.text,
+                group: message.groupId
+            });
+            await newMessage.save();
+
+            // Broadcast the message to all members in the group
+            group.members.forEach(memberId => {
+                const memberSocketId = userSockets[memberId];
+                if (memberSocketId) {
+                    io.to(memberSocketId).emit('groupChatMessage', newMessage);
+                }
+            });
+        } catch (error) {
+            console.error('Error handling group chat message:', error);
         }
     });
 
@@ -218,18 +245,17 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/chat', async (req, res) => {
+app.get('/chat', checkSignIn, async (req, res) => {
     try {
-        // Fetch a list of users from the database
         const users = await User.find({}, 'id'); // Fetch only the 'id' field
-
-        // Render the chat page and pass the list of users to the template
-        res.render('chat', { users });
+        res.render('chat', { users, userId: req.session.user.id });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
 
 app.get('/chat/:userId', checkSignIn, async (req, res) => {
     try {
@@ -278,6 +304,78 @@ app.get('/protected_page', checkSignIn, (req, res) => {
 
 app.use('/protected_page', (err, req, res, next) => {
     res.redirect('/login');
+});
+
+
+app.post('/create-group', checkSignIn, async (req, res) => {
+    try {
+        const { groupName, members } = req.body; // members are usernames or user IDs
+
+        // Convert usernames/IDs to ObjectIds
+        const memberIds = await Promise.all(members.map(async (member) => {
+            const user = await User.findOne({ id: member });
+            return user._id;
+        }));
+
+        const newGroup = new Group({ name: groupName, members: memberIds });
+        await newGroup.save();
+        res.status(200).json({ message: 'Group created successfully', groupId: newGroup._id });
+    } catch (error) {
+        console.error('Error creating group:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
+app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+
+        if (!group) {
+            return res.status(404).send('Group not found');
+        }
+
+        // Here, you might want to check if the user is a member of the group
+        // Render a group chat page (you'll need to create a corresponding Pug template)
+        res.render('group_chat', { group, userId: req.session.user.id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.post('/add-to-group', checkSignIn, async (req, res) => {
+    try {
+        const { groupId, userId } = req.body;
+        const group = await Group.findById(groupId);
+        if (!group.members.includes(userId)) {
+            group.members.push(userId);
+            await group.save();
+            res.status(200).send('User added to group successfully');
+        } else {
+            res.status(400).send('User already in group');
+        }
+    } catch (error) {
+        console.error('Error adding user to group:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/get-group-messages', checkSignIn, async (req, res) => {
+    const { groupId } = req.query;
+
+    try {
+        const messages = await Chat.find({ group: groupId })
+                                  .populate('sender', 'id') // Assuming you want to include the sender's ID
+                                  .sort({ timestamp: 1 }); // Sort by timestamp to get messages in order
+
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching group messages:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 server.listen(PORT, () => {

@@ -1,20 +1,66 @@
-h1 Group Chat: #{groupChat.groupName}
+doctype html
+html
+  head
+    title Group Chat
+    link(rel="stylesheet" href="/css/styles.css")
 
-// Display group chat messages here
+  body
+    .container
+      header
+        h1 Group Chat: #{group.name}
 
-// Add a search bar
-form.search-form(action="/group-chat/:groupId/add-user", method="post")
-  input(type="text" name="username" placeholder="Enter username")
-  button(type="submit") Add User to Group
+      // Chat messages display area
+      section.chat-area
+        ul#chat-messages
+          // Chat messages will be populated here
 
-ul
-  if users && users.length
-    each user in users
-      li
-        a(href=`/chat/${user.id}`)= user.id
-  else
-    li No users found
+      // Message input and send button
+      section.message-input
+        form#chat-form(action="#" method="post")
+          input(type="text" id="message-input" placeholder="Type a message")
+          button(type="submit") Send
 
+      // Navigation Button
+      footer.navigation
+        button.button(onclick="location.href='/chat'") Back to Chat Page
 
-// Add a back button to return to the protected page
-button.button(onclick="location.href='/protected_page'") Back to Protected Page
+    // Include Socket.io script
+    script(src="/socket.io/socket.io.js")
+    script.
+      var socket = io();
+      var groupId = '#{group._id}';
+      var userId = '#{userId}';
+
+      socket.on('connect', () => {
+        // Register the user and group with the server
+        socket.emit('registerGroup', groupId, userId);
+      });
+
+      // Function to display a chat message
+      function displayMessage(sender, message) {
+        var chatMessages = document.getElementById('chat-messages');
+        var messageItem = document.createElement('li');
+        messageItem.textContent = sender + ": " + message;
+        chatMessages.appendChild(messageItem);
+      }
+
+      // Handle form submission (sending messages)
+      var chatForm = document.getElementById('chat-form');
+      var messageInput = document.getElementById('message-input');
+
+      chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var messageText = messageInput.value.trim();
+        if (messageText) {
+          socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
+          displayMessage('You', messageText);
+          messageInput.value = '';
+        }
+      });
+
+      // Handle incoming chat messages from the server
+      socket.on('groupChatMessage', function(message) {
+        if (message.group === groupId) {
+          displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
+        }
+      });

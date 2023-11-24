@@ -8,17 +8,62 @@ html
     .container
       h1 Chat Page
 
-      // Add a search bar
-      form.search-form(action="/search", method="get")
-        input(type="text" name="query" placeholder="Search for users" value=query)
-        button(type="submit") Search
+      // Section for Group Creation with User List
+      section.group-creation
+        h2 Create New Group
+        form#group-creation-form
+          input(type="text" name="groupName" placeholder="Group Name")
 
-      ul
-        each user in users
-          li
-            a(href=`/chat/${user.id}`)= user.id
+          // List of users with checkboxes
+          ul.user-checkbox-list
+            each user in users
+              if user.id != userId 
+                li
+                  label
+                    input(type="checkbox" name="members" value=user.id)
+                    span= user.id
 
-      // Add a back button to return to the protected page
-      button.button(onclick="location.href='/protected_page'") Back to Protected Page
+          button(type="button" onclick="createGroup()") Create Group
 
-      // ... other content ...
+      // Section for Group Links
+      section.group-links
+        h2 Your Groups
+        ul#group-links
+          // Group links will be populated here
+
+      // Navigation Button
+      footer.navigation
+        button.button(onclick="location.href='/protected_page'") Back to Protected Page
+
+    // Include Socket.io script and custom client-side logic
+    script(src="/socket.io/socket.io.js")
+    script.
+      var socket = io(); 
+      var userId = '#{userId}'; 
+
+   
+      function createGroup() {
+        var groupName = document.querySelector('#group-creation-form [name="groupName"]').value;
+        var checkedBoxes = document.querySelectorAll('#group-creation-form [name="members"]:checked');
+        var members = Array.from(checkedBoxes).map(box => box.value);
+
+        fetch('/create-group', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ groupName, members })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.groupId) {
+                var groupLinks = document.getElementById('group-links');
+                var linkItem = document.createElement('li');
+                var link = document.createElement('a');
+                link.href = `/group-chat/${data.groupId}`; 
+                link.textContent = groupName;
+                linkItem.appendChild(link);
+                groupLinks.appendChild(linkItem);
+            }
+           
+        })
+        .catch(error => console.error('Error:', error));
+      }

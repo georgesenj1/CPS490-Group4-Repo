@@ -22,7 +22,17 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema, 'user'); // Forces the collection name to 'user'
 
-module.exports = {
-  User,
-  Chat,
-};
+// Group schema
+const groupSchema = new mongoose.Schema({
+    name: { type: String, required: true, unique: true },
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],
+  });
+  
+  const Group = mongoose.model('Group', groupSchema, 'group');
+  
+  module.exports = {
+    User,
+    Chat,
+    Group, // export the Group model
+  };
