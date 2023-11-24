@@ -8,6 +8,12 @@ html
     .container
       h1 Chat Page
 
+      ul
+        each user in users
+            if user.id != userId 
+            li
+                a(href=`/chat/${user.id}`)= user.id
+      
       // Section for Group Creation with User List
       section.group-creation
         h2 Create New Group
