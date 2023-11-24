@@ -12,7 +12,8 @@ html
       // Chat messages display area
       section.chat-area
         ul#chat-messages
-          // Chat messages will be populated here
+          each msg in messages
+            li #{msg.sender}: #{msg.message}
 
       // Message input and send button
       section.message-input

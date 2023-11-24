@@ -343,6 +343,7 @@ app.post('/create-group', checkSignIn, async (req, res) => {
 });
 
 
+// When the group chat page loads
 app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
     try {
         const { groupId } = req.params;
@@ -352,14 +353,17 @@ app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
             return res.status(404).send('Group not found');
         }
 
-        // Here, you might want to check if the user is a member of the group
-        // Render a group chat page (you'll need to create a corresponding Pug template)
-        res.render('group_chat', { group, userId: req.session.user.id });
+        // Fetch messages for this group
+        const messages = await Chat.find({ group: groupId }).sort({ timestamp: 1 });
+
+        // Render the group chat page with the fetched messages
+        res.render('group_chat', { group, messages, userId: req.session.user.id });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 app.post('/add-to-group', checkSignIn, async (req, res) => {
