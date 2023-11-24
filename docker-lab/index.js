@@ -247,13 +247,28 @@ app.post('/login', async (req, res) => {
 
 app.get('/chat', checkSignIn, async (req, res) => {
     try {
-        const users = await User.find({}, 'id'); // Fetch only the 'id' field
-        res.render('chat', { users, userId: req.session.user.id });
+        const currentUser = req.session.user.id;
+        const users = await User.find({}, 'id'); // Fetch other users
+
+        // Find the current user's ObjectId using the username
+        const currentUserDoc = await User.findOne({ id: currentUser });
+        if (!currentUserDoc) {
+            throw new Error('Current user not found');
+        }
+
+        // Fetch groups where the current user is a member using ObjectId
+        const groups = await Group.find({ members: currentUserDoc._id });
+
+        // Render the chat page with users and groups data
+        res.render('chat', { users, groups, userId: currentUser });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+
 
 
 

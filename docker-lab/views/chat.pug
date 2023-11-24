@@ -25,11 +25,13 @@ html
 
           button(type="button" onclick="createGroup()") Create Group
 
-      // Section for Group Links
-      section.group-links
-        h2 Your Groups
-        ul#group-links
-          // Group links will be populated here
+      // Section for displaying group chat links
+      section.group-chats
+        h2 Your Group Chats
+        ul#group-chat-links
+          each group in groups
+            li
+              a(href=`/group-chat/${group._id}`)= group.name
 
       // Navigation Button
       footer.navigation
