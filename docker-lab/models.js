@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 
 // Schema for storing chat messages
 const chatSchema = new mongoose.Schema({
-  sender: { type: String, required: true, ref: 'User' }, // Reference to the User's 'id' field
-  receiver: { type: String, required: true, ref: 'User' }, // Reference to the User's 'id' field
-  message: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now },
-});
+    sender: { type: String, required: true, ref: 'User' },
+    receiver: { type: String, ref: 'User' }, // Make receiver optional
+    message: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    group: { type: mongoose.Schema.Types.ObjectId, ref: 'Group' }, // Add a field for group chats
+  });
+  
 
 const Chat = mongoose.model('Chat', chatSchema, 'chat');
 

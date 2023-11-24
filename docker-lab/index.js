@@ -90,18 +90,18 @@ io.on('connection', (socket) => {
         try {
             // Find the group by its ID
             const group = await Group.findById(message.groupId);
-
+    
             // Save the message with a reference to the group
             const newMessage = new Chat({
                 sender: message.senderUserId,
                 message: message.text,
-                group: message.groupId
+                group: message.groupId // Assign the group ID
             });
             await newMessage.save();
-
+    
             // Broadcast the message to all members in the group
             group.members.forEach(memberId => {
-                const memberSocketId = userSockets[memberId];
+                const memberSocketId = userSockets[memberId.toString()];
                 if (memberSocketId) {
                     io.to(memberSocketId).emit('groupChatMessage', newMessage);
                 }
@@ -110,6 +110,7 @@ io.on('connection', (socket) => {
             console.error('Error handling group chat message:', error);
         }
     });
+    
 
     socket.on('disconnect', () => {
         for (const [userId, socketId] of Object.entries(userSockets)) {
