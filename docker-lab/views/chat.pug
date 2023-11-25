@@ -70,6 +70,9 @@ html
         var checkedBoxes = document.querySelectorAll('#group-creation-form [name="members"]:checked');
         var members = Array.from(checkedBoxes).map(box => box.value);
 
+        // Add the current user to the group members list
+        members.push(userId); // Include the user who is creating the group
+
         fetch('/create-group', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -124,5 +127,3 @@ html
       socket.on('publicMessage', function (message) {
         displayPublicMessage(message.sender, message.message);
       });
-
-    
