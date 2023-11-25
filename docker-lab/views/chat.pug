@@ -8,6 +8,11 @@ html
     .container.main-box
       h1 Chat Page
 
+      // Search Form (Inside the .main-box)
+      form(action="/search" method="get")
+        input(type="text" name="query" placeholder="Search Users")
+        button(type="submit") Search
+
       // Container for the four boxes
       .chat-boxes-container
         // One-on-One Chats Box

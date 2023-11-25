@@ -116,6 +116,7 @@ body {
     padding: 20px; /* Adjust padding as needed */
     background-color: white; /* Ensure it has a white background */
     box-sizing: border-box; /* Include padding and border in the width */
+    color: #333; /* Darken the text color */
   }
   
   /* Style for each individual box */
@@ -125,5 +126,6 @@ body {
     border: 1px solid #ccc; /* Add a border for separation */
     margin-right: 10px; /* Add margin to create space between boxes */
     box-sizing: border-box; /* Include padding and border in the width */
+    color: #333; /* Darken the text color */
   }
   
