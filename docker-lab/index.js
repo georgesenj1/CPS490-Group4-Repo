@@ -71,13 +71,19 @@ io.on('connection', (socket) => {
                 sender: message.senderUserId,
                 receiver: message.receiverUserId,
                 message: message.text,
+                public: message.isPublic // Add this line to handle public messages
             });
             await newMessage.save();
             console.log('Message saved:', newMessage);
 
-            const receiverSocketId = userSockets[message.receiverUserId];
-            if (receiverSocketId) {
-                io.to(receiverSocketId).emit('chatMessage', newMessage);
+            // Check if the message is public and broadcast accordingly
+            if(message.isPublic) {
+                io.emit('publicMessage', newMessage); // Broadcast to all users
+            } else {
+                const receiverSocketId = userSockets[message.receiverUserId];
+                if (receiverSocketId) {
+                    io.to(receiverSocketId).emit('chatMessage', newMessage);
+                }
             }
         } catch (error) {
             console.error('Error handling chat message:', error);
@@ -163,33 +169,38 @@ app.post('/signup', async (req, res) => {
 
 app.post('/send-message', checkSignIn, async (req, res) => {
     try {
-        const { receiverUserId, text } = req.body;
+        const { receiverUserId, text, isPublic } = req.body; // Add 'isPublic' to determine the message type
         const senderUserId = req.session.user.id; // Get sender's user ID from session
 
         console.log('Sender:', senderUserId);
         console.log('Receiver:', receiverUserId);
         console.log('Message:', text);
+        console.log('Is Public:', isPublic);
 
         // Create a new chat message document
         const newMessage = new Chat({
             sender: senderUserId,
-            receiver: receiverUserId,
             message: text,
+            public: isPublic // Set the public attribute based on the request
         });
+
+        if (isPublic) {
+            newMessage.receiver = null; // For public messages, receiver is null
+            io.emit('publicMessage', newMessage); // Emit to all users for public messages
+        } else {
+            newMessage.receiver = receiverUserId;
+            // Store the sender's and receiver's socket ID in the userSockets object
+            userSockets[senderUserId] = req.session.socketId;
+            const receiverSocketId = userSockets[receiverUserId];
+
+            // Emit the chat message to the receiver using Socket.io
+            if (receiverSocketId) {
+                io.to(receiverSocketId).emit('chatMessage', newMessage);
+            }
+        }
 
         // Save the message to the database
         await newMessage.save();
-
-        // Store the sender's socket ID in the userSockets object
-        userSockets[senderUserId] = req.session.socketId;
-
-        // Get the receiver's socket ID from the userSockets object
-        const receiverSocketId = userSockets[receiverUserId];
-
-        // Emit the chat message to the receiver using Socket.io
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit('chatMessage', newMessage);
-        }
 
         // Respond with a success message
         res.status(200).send('Message sent successfully');
@@ -198,6 +209,17 @@ app.post('/send-message', checkSignIn, async (req, res) => {
         res.status(500).send('Error sending message');
     }
 });
+
+app.get('/get-public-messages', async (req, res) => {
+    try {
+        const messages = await Chat.find({ public: true }).sort({ timestamp: 1 });
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching public messages:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/get-messages', async (req, res) => {
     const { senderId, receiverId } = req.query;
