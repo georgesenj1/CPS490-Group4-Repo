@@ -105,3 +105,25 @@ body {
     margin-top: 10px;  /* adjust this value as needed */
 }
 
+.chat-boxes-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space evenly between the boxes */
+  }
+  
+  /* Style for the main white box */
+  .main-box {
+    width: 80%; /* Increase the width as needed */
+    padding: 20px; /* Adjust padding as needed */
+    background-color: white; /* Ensure it has a white background */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+  
+  /* Style for each individual box */
+  .chat-box {
+    width: 22%; /* Adjust the width as needed */
+    padding: 10px;
+    border: 1px solid #ccc; /* Add a border for separation */
+    margin-right: 10px; /* Add margin to create space between boxes */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+  

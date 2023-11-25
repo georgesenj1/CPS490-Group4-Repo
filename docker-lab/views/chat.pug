@@ -5,64 +5,63 @@ html
     link(rel="stylesheet" href="/css/styles.css")
 
   body
-    .container
+    .container.main-box
       h1 Chat Page
 
-      // Search Form
-      form(action="/search" method="get")
-        input(type="text" name="query" placeholder="Search Users")
-        button(type="submit") Search
-
-      // User Chats Section
-      ul
-        each user in users
-          if user.id != userId 
-            li
-              a(href=`/chat/${user.id}`)= user.id
-      
-      // Group Creation Section
-      section.group-creation
-        h2 Create New Group
-        form#group-creation-form
-          input(type="text" name="groupName" placeholder="Group Name")
-
-          // List of users with checkboxes for group creation
-          ul.user-checkbox-list
+      // Container for the four boxes
+      .chat-boxes-container
+        // One-on-One Chats Box
+        .chat-box
+          h2 One-on-One Chats
+          ul
             each user in users
               if user.id != userId 
                 li
-                  label
-                    input(type="checkbox" name="members" value=user.id)
-                    span= user.id
+                  a(href=`/chat/${user.id}`)= user.id
 
-          button(type="button" onclick="createGroup()") Create Group
+        // Group Chat Links Box
+        .chat-box
+          h2 Group Chat Links
+          ul#group-chat-links
+            each group in groups
+              li
+                a(href=`/group-chat/${group._id}`)= group.name
 
-      // Displaying Group Chat Links
-      section.group-chats
-        h2 Your Group Chats
-        ul#group-chat-links
-          each group in groups
-            li
-              a(href=`/group-chat/${group._id}`)= group.name
+        // Create New Group Box
+        .chat-box
+          h2 Create New Group
+          form#group-creation-form
+            input(type="text" name="groupName" placeholder="Group Name")
 
-      // Public Messages Section
-      section.public-messages
-        h2 Global Messages
-        ul#public-chat-messages
-          // Public messages will be populated here
+            // List of users with checkboxes for group creation
+            ul.user-checkbox-list
+              each user in users
+                if user.id != userId 
+                  li
+                    label
+                      input(type="checkbox" name="members" value=user.id)
+                      span= user.id
 
-        form#public-chat-form(action="#" method="post")
-          input(type="text" id="public-message-input" placeholder="Type a public message")
-          button(type="submit") Send
+            button(type="button" onclick="createGroup()") Create Group
+
+        // Public Messages Box
+        .chat-box
+          h2 Public Messages
+          ul#public-chat-messages
+            // Public messages will be populated here
+
+          form#public-chat-form(action="#" method="post")
+            input(type="text" id="public-message-input" placeholder="Type a public message")
+            button(type="submit") Send
 
       // Navigation Button
       footer.navigation
         button.button(onclick="location.href='/protected_page'") Back to Protected Page
-        
-        //- Bubbles for aesthetics
-        .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
-        .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
-        .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
+
+      //- Bubbles for aesthetics
+      .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+      .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+      .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
 
     // Socket.io and Client-Side Logic
     script(src="/socket.io/socket.io.js")
