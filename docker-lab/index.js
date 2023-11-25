@@ -167,6 +167,11 @@ app.post('/signup', async (req, res) => {
     }
 });
 
+app.get('/update', (req, res) => {
+    // Render the existing "update.pug" template
+    res.render('update');
+});
+
 app.post('/send-message', checkSignIn, async (req, res) => {
     try {
         const { receiverUserId, text, isPublic } = req.body; // Add 'isPublic' to determine the message type
