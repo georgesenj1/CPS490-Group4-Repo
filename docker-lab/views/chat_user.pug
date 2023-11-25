@@ -3,86 +3,75 @@ html
   head
     title Chat with #{user.id}
     link(rel="stylesheet" href="/css/styles.css")
+    script(type='module' src='https://unpkg.com/emoji-picker-element@latest')
+
 
   body
     .container
       h1 Chat with #{user.id}
 
-      // Chat messages
       ul#chat-messages
-        // Chat messages will be populated here
+        // Chat messages will be dynamically populated here
 
-      // Message input and send button
+      // Emoji Picker Container
+      .emoji-picker-container
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 50px;')
+
       form#chat-form(action="#" method="post")
         input(type="text" id="message-input" placeholder="Type a message")
         button(type="submit") Send
 
-      // Back to Chat Page button
       button.button(onclick="location.href='/chat'") Back to Chat
 
-  // Include Socket.io script outside the body tag
-  script(src="/socket.io/socket.io.js")
-  script.
-    document.addEventListener('DOMContentLoaded', function () {
-      var socket = io(); // Connects to the Socket.io server
-      var userId = "#{user.id}"; // ID of the user you are chatting with
-      var senderUserId = "#{session.user.id}"; // ID of the logged-in user
+    script(src="/socket.io/socket.io.js")
+    script.
+      document.addEventListener('DOMContentLoaded', function () {
+        var socket = io();
+        var userId = "#{user.id}";
+        var senderUserId = "#{session.user.id}";
 
-      // Register the sender with the server
-      socket.emit('registerUser', senderUserId);
+        socket.emit('registerUser', senderUserId);
 
-      // Function to display a chat message
-      function displayMessage(sender, message) {
-        var chatMessages = document.getElementById('chat-messages');
-        var messageItem = document.createElement('li');
-        messageItem.textContent = sender + ": " + message;
-        chatMessages.appendChild(messageItem);
-      }
+        function displayMessage(sender, message) {
+          var chatMessages = document.getElementById('chat-messages');
+          var messageItem = document.createElement('li');
+          messageItem.textContent = sender + ": " + message;
+          chatMessages.appendChild(messageItem);
+        }
 
-      // Function to fetch and display chat history
-      function fetchAndDisplayChatHistory() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/get-messages?senderId=' + senderUserId + '&receiverId=' + userId, true);
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            var messages = JSON.parse(xhr.responseText);
-            messages.forEach(function(message) {
-              displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
-            });
-          } else {
-            console.error('Error fetching chat history:', xhr.statusText);
+        function fetchAndDisplayChatHistory() {
+          fetch('/get-messages?senderId=' + senderUserId + '&receiverId=' + userId)
+            .then(response => response.json())
+            .then(messages => {
+              messages.forEach(message => {
+                displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
+              });
+            })
+            .catch(error => console.error('Error fetching chat history:', error));
+        }
+
+        fetchAndDisplayChatHistory();
+
+        var chatForm = document.getElementById('chat-form');
+        var messageInput = document.getElementById('message-input');
+
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var messageText = messageInput.value.trim();
+          if (messageText) {
+            socket.emit('chatMessage', { senderUserId, receiverUserId: userId, text: messageText });
+            displayMessage('You', messageText);
+            messageInput.value = '';
           }
-        };
-        xhr.send();
-      }
+        });
 
-      // Call this function when the page loads
-      fetchAndDisplayChatHistory();
+        socket.on('chatMessage', function (message) {
+          if (message.sender === senderUserId || message.receiver === senderUserId) {
+            displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
+          }
+        });
 
-      // Handle form submission (sending messages)
-      var chatForm = document.getElementById('chat-form');
-      var messageInput = document.getElementById('message-input');
-
-      chatForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var messageText = messageInput.value.trim(); // Trim whitespace
-        if (messageText) {
-          // Emit the chat message to the server
-          socket.emit('chatMessage', { senderUserId, receiverUserId: userId, text: messageText });
-
-          // Display the sent message in the chat window
-          displayMessage('You', messageText);
-
-          // Clear the message input
-          messageInput.value = '';
-        }
+        document.querySelector('#emoji-picker').addEventListener('emoji-click', function(e) {
+          messageInput.value += e.detail.emoji.unicode;
+        });
       });
-
-      // Handle incoming chat messages from the server
-      socket.on('chatMessage', function (message) {
-        if (message.sender === senderUserId || message.receiver === senderUserId) {
-          // Display the received message in the chat window
-          displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
-        }
-      });
-    });
