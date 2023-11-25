@@ -8,6 +8,11 @@ html
     .container
       h1 Chat Page
 
+      // Search Form
+      form(action="/search" method="get")
+        input(type="text" name="query" placeholder="Search Users")
+        button(type="submit") Search
+
       // User Chats Section
       ul
         each user in users

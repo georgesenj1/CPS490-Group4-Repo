@@ -292,6 +292,25 @@ app.get('/chat', checkSignIn, async (req, res) => {
 
 
 
+app.get('/search', checkSignIn, async (req, res) => {
+    try {
+        const { query } = req.query; // Extract the search query from the request
+
+        // Fetch users that match the search query using a regex for case-insensitive partial matches
+        const users = await User.find({ id: { $regex: query, $options: 'i' } });
+
+        const currentUser = req.session.user.id;
+        const currentUserDoc = await User.findOne({ id: currentUser });
+
+        const groups = await Group.find({ members: currentUserDoc._id });
+
+        // Render the chat page with the search results
+        res.render('chat', { users, groups, userId: currentUser, query: query });
+    } catch (err) {
+        console.error('Error in /search:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 
