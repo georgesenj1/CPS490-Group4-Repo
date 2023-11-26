@@ -5,13 +5,13 @@ html
     link(rel="stylesheet" href="/css/styles.css")
     script(type='module' src='https://unpkg.com/emoji-picker-element@latest')
 
-
   body
     .container
       h1 Chat with #{user.id}
 
       ul#chat-messages
         // Chat messages will be dynamically populated here
+      p#typing-indicator(style="color: grey;")
 
       // Emoji Picker Container
       .emoji-picker-container
@@ -73,5 +73,40 @@ html
 
         document.querySelector('#emoji-picker').addEventListener('emoji-click', function(e) {
           messageInput.value += e.detail.emoji.unicode;
+        });
+
+        var typingTimer; // Timer identifier
+        var doneTypingInterval = 1000; // Time in ms (1 second)
+
+        // Detect keyup event on the message input
+        messageInput.addEventListener('keyup', () => {
+          clearTimeout(typingTimer);
+          if (messageInput.value) {
+            socket.emit('typing', { senderUserId, receiverUserId: userId });
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+          }
+        });
+
+        // User is "finished" typing
+        function doneTyping() {
+          socket.emit('stopTyping', { senderUserId, receiverUserId: userId });
+        }
+
+        // To display typing status
+        function showTypingStatus(userId, isTyping) {
+          var typingIndicator = document.getElementById('typing-indicator');
+          if (userId !== senderUserId && isTyping) {
+            typingIndicator.textContent = userId + ' is typing...';
+          } else {
+            typingIndicator.textContent = ''; // Clear the indicator when the user stops typing
+          }
+        }
+
+        socket.on('typing', function (userId) {
+          showTypingStatus(userId, true);
+        });
+
+        socket.on('stopTyping', function (userId) {
+          showTypingStatus(userId, false);
         });
       });

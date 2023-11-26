@@ -65,6 +65,16 @@ io.on('connection', (socket) => {
         console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
     });
 
+    // Inside io.on('connection', (socket) => { ... });
+
+    socket.on('typing', (data) => {
+        socket.to(userSockets[data.receiverUserId]).emit('typing', data.senderUserId);
+    });
+    
+    socket.on('stopTyping', (data) => {
+        socket.to(userSockets[data.receiverUserId]).emit('stopTyping', data.senderUserId);
+    });
+  
     socket.on('chatMessage', async (message) => {
         try {
             const newMessage = new Chat({
