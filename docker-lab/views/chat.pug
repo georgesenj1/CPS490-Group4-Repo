@@ -3,6 +3,8 @@ html
   head
     title Chat Page
     link(rel="stylesheet" href="/css/styles.css")
+    script(src="/socket.io/socket.io.js")
+    script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
 
   body
     .container.main-box
@@ -55,6 +57,11 @@ html
           ul#public-chat-messages
             // Public messages will be populated here
 
+          // Emoji Picker Container
+          .emoji-picker-container
+            emoji-picker#emoji-picker(style='position: absolute; bottom: 20px; right: 20px; z-index: 1000;')
+
+
           form#public-chat-form(action="#" method="post")
             input(type="text" id="public-message-input" placeholder="Type a public message")
             button(type="submit") Send
@@ -69,19 +76,15 @@ html
       .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
 
     // Socket.io and Client-Side Logic
-    script(src="/socket.io/socket.io.js")
     script.
       var socket = io(); 
-      var userId = '#{userId}'; 
+      var userId = !{JSON.stringify(userId)}; // Ensure userId is properly encoded as JSON
 
       function createGroup() {
         var groupName = document.querySelector('#group-creation-form [name="groupName"]').value;
         var checkedBoxes = document.querySelectorAll('#group-creation-form [name="members"]:checked');
         var members = Array.from(checkedBoxes).map(box => box.value);
-
-        // Add the current user to the group members list
         members.push(userId); // Include the user who is creating the group
-
         fetch('/create-group', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -102,16 +105,14 @@ html
         .catch(error => console.error('Error:', error));
       }
 
-      // Fetch and display public chat history
       function fetchAndDisplayPublicChatHistory() {
         fetch('/get-public-messages')
           .then(response => response.json())
           .then(messages => {
-              messages.forEach(message => displayPublicMessage(message.sender, message.message));
+            messages.forEach(message => displayPublicMessage(message.sender, message.message));
           });
       }
 
-      // Function to display a public chat message
       function displayPublicMessage(sender, message) {
         var publicChatMessages = document.getElementById('public-chat-messages');
         var messageItem = document.createElement('li');
@@ -121,18 +122,23 @@ html
 
       fetchAndDisplayPublicChatHistory();
 
-      // Handle public chat form submission
       document.getElementById('public-chat-form').addEventListener('submit', function (e) {
         e.preventDefault();
         var messageText = document.getElementById('public-message-input').value.trim();
         if (messageText) {
-          socket.emit('chatMessage', { senderUserId: userId, text: messageText, public: true });
+          socket.emit('chatMessage', { senderUserId: userId, text: messageText, isPublic: true });
           displayPublicMessage('You', messageText);
           document.getElementById('public-message-input').value = '';
         }
       });
 
-      // Handle incoming public chat messages from the server
       socket.on('publicMessage', function (message) {
         displayPublicMessage(message.sender, message.message);
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const emojiPicker = document.querySelector('#emoji-picker');
+        emojiPicker.addEventListener('emoji-click', event => {
+          document.getElementById('public-message-input').value += event.detail.emoji.unicode;
+        });
       });

@@ -1,67 +1,70 @@
 doctype html
 html
   head
-    title Group Chat
+    title Group Chat: #{group.name}
     link(rel="stylesheet" href="/css/styles.css")
+    script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
 
   body
     .container
       header
         h1 Group Chat: #{group.name}
 
-      // Chat messages display area
       section.chat-area
         ul#chat-messages
           each msg in messages
             li #{msg.sender}: #{msg.message}
 
-      // Message input and send button
+      .emoji-picker-container
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 50px;')
+
       section.message-input
         form#chat-form(action="#" method="post")
           input(type="text" id="message-input" placeholder="Type a message")
           button(type="submit") Send
 
-      // Navigation Button
       footer.navigation
         button.button(onclick="location.href='/chat'") Back to Chat Page
 
-    // Include Socket.io script
     script(src="/socket.io/socket.io.js")
     script.
       var socket = io();
       var groupId = '#{group._id}';
       var userId = '#{userId}';
 
-      socket.on('connect', () => {
-        // Register the user and group with the server
-        socket.emit('registerGroup', groupId, userId);
-      });
+      document.addEventListener('DOMContentLoaded', function () {
+        socket.on('connect', () => {
+          socket.emit('registerGroup', groupId, userId);
+        });
 
-      // Function to display a chat message
-      function displayMessage(sender, message) {
-        var chatMessages = document.getElementById('chat-messages');
-        var messageItem = document.createElement('li');
-        messageItem.textContent = sender + ": " + message;
-        chatMessages.appendChild(messageItem);
-      }
-
-      // Handle form submission (sending messages)
-      var chatForm = document.getElementById('chat-form');
-      var messageInput = document.getElementById('message-input');
-
-      chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var messageText = messageInput.value.trim();
-        if (messageText) {
-          socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
-          displayMessage('You', messageText);
-          messageInput.value = '';
+        function displayMessage(sender, message) {
+          var chatMessages = document.getElementById('chat-messages');
+          var messageItem = document.createElement('li');
+          messageItem.textContent = sender + ": " + message;
+          chatMessages.appendChild(messageItem);
         }
-      });
 
-      // Handle incoming chat messages from the server
-      socket.on('groupChatMessage', function(message) {
-        if (message.group === groupId) {
-          displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
-        }
+        var chatForm = document.getElementById('chat-form');
+        var messageInput = document.getElementById('message-input');
+
+        chatForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var messageText = messageInput.value.trim();
+          if (messageText) {
+            socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
+            displayMessage('You', messageText);
+            messageInput.value = '';
+          }
+        });
+
+        socket.on('groupChatMessage', function(message) {
+          if (message.group === groupId) {
+            displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
+          }
+        });
+
+        document.querySelector('#emoji-picker').addEventListener('emoji-click', event => {
+          const emoji = event.detail.emoji.unicode;
+          messageInput.value += emoji;
+        });
       });
