@@ -75,6 +75,36 @@ io.on('connection', (socket) => {
         socket.to(userSockets[data.receiverUserId]).emit('stopTyping', data.senderUserId);
     });
   
+
+    // Handling typing in group chats
+    socket.on('groupTyping', async (data) => {
+        const group = await Group.findById(data.groupId);
+        if (group) {
+            group.members.forEach(memberId => {
+                if (memberId.toString() !== data.userId) {
+                    const memberSocketId = userSockets[memberId.toString()];
+                    if (memberSocketId) {
+                        io.to(memberSocketId).emit('groupTyping', { userId: data.userId, groupId: data.groupId });
+                    }
+                }
+            });
+        }
+    });
+
+    socket.on('groupStopTyping', async (data) => {
+        const group = await Group.findById(data.groupId);
+        if (group) {
+            group.members.forEach(memberId => {
+                if (memberId.toString() !== data.userId) {
+                    const memberSocketId = userSockets[memberId.toString()];
+                    if (memberSocketId) {
+                        io.to(memberSocketId).emit('groupStopTyping', { userId: data.userId, groupId: data.groupId });
+                    }
+                }
+            });
+        }
+    });
+        
     socket.on('chatMessage', async (message) => {
         try {
             const newMessage = new Chat({

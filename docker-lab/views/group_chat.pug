@@ -14,6 +14,7 @@ html
         ul#chat-messages
           each msg in messages
             li #{msg.sender}: #{msg.message}
+        p#typing-indicator(style="color: grey;") 
 
       .emoji-picker-container
         emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 50px;')
@@ -28,21 +29,14 @@ html
 
     script(src="/socket.io/socket.io.js")
     script.
-      var socket = io();
-      var groupId = '#{group._id}';
-      var userId = '#{userId}';
-
       document.addEventListener('DOMContentLoaded', function () {
+        var socket = io();
+        var groupId = '#{group._id}';
+        var userId = '#{userId}';
+
         socket.on('connect', () => {
           socket.emit('registerGroup', groupId, userId);
         });
-
-        function displayMessage(sender, message) {
-          var chatMessages = document.getElementById('chat-messages');
-          var messageItem = document.createElement('li');
-          messageItem.textContent = sender + ": " + message;
-          chatMessages.appendChild(messageItem);
-        }
 
         var chatForm = document.getElementById('chat-form');
         var messageInput = document.getElementById('message-input');
@@ -60,6 +54,49 @@ html
         socket.on('groupChatMessage', function(message) {
           if (message.group === groupId) {
             displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
+          }
+        });
+
+        var typingTimer;
+        var doneTypingInterval = 1000; // 1 second
+
+        messageInput.addEventListener('keyup', () => {
+          clearTimeout(typingTimer);
+          if (messageInput.value) {
+            socket.emit('groupTyping', { groupId, userId });
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+          }
+        });
+
+        function doneTyping() {
+          socket.emit('groupStopTyping', { groupId, userId });
+        }
+
+        function displayMessage(sender, message) {
+          var chatMessages = document.getElementById('chat-messages');
+          var messageItem = document.createElement('li');
+          messageItem.textContent = sender + ": " + message;
+          chatMessages.appendChild(messageItem);
+        }
+
+        function showTypingStatus(userId, isTyping) {
+          var typingIndicator = document.getElementById('typing-indicator');
+          if (isTyping) {
+            typingIndicator.textContent = userId + ' is typing...';
+          } else {
+            typingIndicator.textContent = ''; // Clear the indicator when the user stops typing
+          }
+        }
+
+        socket.on('groupTyping', function(data) {
+          if (data.groupId === groupId && data.userId !== userId) {
+            showTypingStatus(data.userId, true);
+          }
+        });
+
+        socket.on('groupStopTyping', function(data) {
+          if (data.groupId === groupId && data.userId !== userId) {
+            showTypingStatus(data.userId, false);
           }
         });
 
