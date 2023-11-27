@@ -127,7 +127,7 @@ html
         var messageText = document.getElementById('public-message-input').value.trim();
         if (messageText) {
           socket.emit('chatMessage', { senderUserId: userId, text: messageText, isPublic: true });
-          displayPublicMessage('You', messageText);
+          
           document.getElementById('public-message-input').value = '';
         }
       });
