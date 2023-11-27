@@ -1,0 +1,112 @@
+doctype html
+html
+  head
+    title Group Chat: #{group.name}
+    link(rel="stylesheet" href="/css/styles.css")
+    script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
+
+  body
+    .container
+      header
+        h1 Group Chat: #{group.name}
+
+      section.chat-area
+        ul#chat-messages
+          each msg in messages
+            li #{msg.sender}: #{msg.message}
+        p#typing-indicator(style="color: grey;") 
+
+      .emoji-picker-container
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px;')
+
+      section.message-input
+        form#chat-form(action="#" method="post")
+          input(type="text" id="message-input" placeholder="Type a message")
+          button(type="submit") Send
+
+      footer.navigation
+        button.button(onclick="location.href='/chat'") Back to Chat Page
+    
+
+        .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+        .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+        .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
+
+    script(src="/socket.io/socket.io.js")
+    script.
+      document.addEventListener('DOMContentLoaded', function () {
+        var socket = io();
+        var groupId = '#{group._id}';
+        var userId = '#{userId}';
+
+        socket.on('connect', () => {
+          socket.emit('registerGroup', groupId, userId);
+        });
+
+        var chatForm = document.getElementById('chat-form');
+        var messageInput = document.getElementById('message-input');
+
+        chatForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var messageText = messageInput.value.trim();
+          if (messageText) {
+            socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
+            displayMessage('You', messageText);
+            messageInput.value = '';
+          }
+        });
+
+        socket.on('groupChatMessage', function(message) {
+          if (message.group === groupId) {
+            displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
+          }
+        });
+
+        var typingTimer;
+        var doneTypingInterval = 1000; // 1 second
+
+        messageInput.addEventListener('keyup', () => {
+          clearTimeout(typingTimer);
+          if (messageInput.value) {
+            socket.emit('groupTyping', { groupId, userId });
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+          }
+        });
+
+        function doneTyping() {
+          socket.emit('groupStopTyping', { groupId, userId });
+        }
+
+        function displayMessage(sender, message) {
+          var chatMessages = document.getElementById('chat-messages');
+          var messageItem = document.createElement('li');
+          messageItem.textContent = sender + ": " + message;
+          chatMessages.appendChild(messageItem);
+        }
+
+        function showTypingStatus(userId, isTyping) {
+          var typingIndicator = document.getElementById('typing-indicator');
+          if (isTyping) {
+            typingIndicator.textContent = userId + ' is typing...';
+          } else {
+            typingIndicator.textContent = ''; // Clear the indicator when the user stops typing
+          }
+        }
+
+        socket.on('groupTyping', function(data) {
+          if (data.groupId === groupId && data.userId !== userId) {
+            showTypingStatus(data.userId, true);
+          }
+        });
+
+        socket.on('groupStopTyping', function(data) {
+          if (data.groupId === groupId && data.userId !== userId) {
+            showTypingStatus(data.userId, false);
+          }
+        });
+
+        document.querySelector('#emoji-picker').addEventListener('emoji-click', event => {
+          const emoji = event.detail.emoji.unicode;
+          messageInput.value += emoji;
+        });
+      });
