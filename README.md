@@ -305,7 +305,7 @@ Sequence Diagram:
 
 - **Authorized Users can access the Restricted Page**
 
-<img src="images/" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+<img src="images/usecase_authorizedusers_access_restricted_page.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 User Story: As an authorized user, I want to access restricted areas of the application.
 
@@ -325,7 +325,7 @@ User Case Description: Allows logged-in and verified users to access pages or fe
 
 
 Sequence Diagram:
-<img src="images/" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+<img src="images/sequence_authorizedusers_access_restricted_page.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 
 
@@ -403,7 +403,7 @@ User Case Description: Enables users to delete their account from the applicatio
 
 
 Sequence Diagram:
-<img src="images/sequence_account_delete" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+<img src="images/sequence_account_delete.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 
 
