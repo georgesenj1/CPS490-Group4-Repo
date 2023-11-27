@@ -4,7 +4,13 @@ html
     title Chat with #{user.id}
     link(rel="stylesheet" href="/css/styles.css")
     script(type='module' src='https://unpkg.com/emoji-picker-element@latest')
-
+    style.
+      #chat-messages li {
+        color: #000; /* Sets the text color to black */
+      }
+      #typing-indicator {
+        color: #333; /* Darker shade of grey for the typing indicator */
+      }
 
   body
     .container
@@ -16,7 +22,8 @@ html
 
       // Emoji Picker Container
       .emoji-picker-container
-        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px;')
+        button#emoji-button Emoji
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px; display: none;')
 
       form#chat-form(action="#" method="post")
         input(type="text" id="message-input" placeholder="Type a message")
@@ -73,6 +80,15 @@ html
         socket.on('chatMessage', function (message) {
           if (message.sender === senderUserId || message.receiver === senderUserId) {
             displayMessage(message.sender === senderUserId ? 'You' : message.sender, message.message);
+          }
+        });
+
+        document.querySelector('#emoji-button').addEventListener('click', function() {
+          var emojiPicker = document.getElementById('emoji-picker');
+          if (emojiPicker.style.display === 'none') {
+            emojiPicker.style.display = 'block';
+          } else {
+            emojiPicker.style.display = 'none';
           }
         });
 

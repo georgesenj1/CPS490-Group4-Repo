@@ -4,6 +4,13 @@ html
     title Group Chat: #{group.name}
     link(rel="stylesheet" href="/css/styles.css")
     script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
+    style.
+      #chat-messages li {
+        color: #000; /* Sets the text color to black */
+      }
+      #typing-indicator {
+        color: #333; /* Darker shade of grey for the typing indicator */
+      }
 
   body
     .container
@@ -17,7 +24,8 @@ html
         p#typing-indicator(style="color: grey;") 
 
       .emoji-picker-container
-        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px;')
+        button#emoji-button Emoji
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px; display: none;')
 
       section.message-input
         form#chat-form(action="#" method="post")
@@ -26,11 +34,10 @@ html
 
       footer.navigation
         button.button(onclick="location.href='/chat'") Back to Chat Page
-    
 
-        .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
-        .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
-        .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
+    .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+    .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+    .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
 
     script(src="/socket.io/socket.io.js")
     script.
@@ -102,6 +109,15 @@ html
         socket.on('groupStopTyping', function(data) {
           if (data.groupId === groupId && data.userId !== userId) {
             showTypingStatus(data.userId, false);
+          }
+        });
+
+        document.querySelector('#emoji-button').addEventListener('click', function() {
+          var emojiPicker = document.getElementById('emoji-picker');
+          if (emojiPicker.style.display === 'none') {
+            emojiPicker.style.display = 'block';
+          } else {
+            emojiPicker.style.display = 'none';
           }
         });
 

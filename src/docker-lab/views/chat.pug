@@ -57,10 +57,9 @@ html
           ul#public-chat-messages
             // Public messages will be populated here
 
-          // Emoji Picker Container
           .emoji-picker-container
-            emoji-picker#emoji-picker(style='position: absolute; bottom: 20px; left: 20px; z-index: 1000;')
-
+            button#emoji-button Emoji
+            emoji-picker#emoji-picker(style='position: absolute; bottom: 20px; left: 20px; z-index: 1000; display: none;')
 
           form#public-chat-form(action="#" method="post")
             input(type="text" id="public-message-input" placeholder="Type a public message")
@@ -77,6 +76,14 @@ html
 
     // Socket.io and Client-Side Logic
     script.
+      document.getElementById('emoji-button').addEventListener('click', function() {
+        var emojiPicker = document.getElementById('emoji-picker');
+        if (emojiPicker.style.display === 'none') {
+          emojiPicker.style.display = 'block';
+        } else {
+          emojiPicker.style.display = 'none';
+        }
+      });
       var socket = io(); 
       var userId = !{JSON.stringify(userId)}; // Ensure userId is properly encoded as JSON
 
