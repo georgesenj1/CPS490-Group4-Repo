@@ -8,10 +8,10 @@ const multer = require('multer');
 const upload = multer();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { User, Chat, Group, PublicChat } = require('./models'); // Import the Chat model
-const http = require('http'); // Import the 'http' module
-const server = http.createServer(app); // Create an HTTP server
-const io = require('socket.io')(server); // Set up Socket.io
+const { User, Chat, Group } = require('./models'); // Import the User, Chat, and Group models
+const http = require('http');
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 
 const PORT = process.env.PORT || 3001;
 
@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.array());
 app.use(cookieParser());
 app.use(session({
-    secret: process.env.SESSION_SECRET, 
+    secret: 'your-session-secret', 
     resave: true, 
     saveUninitialized: true
 }));
@@ -54,7 +54,6 @@ const checkSignIn = (req, res, next) => {
 
 // Create an object to store user-to-socket mappings
 const userSockets = {};
-// ... [Rest of your existing server-side code] ...
 
 // Socket.io setup
 io.on('connection', (socket) => {
@@ -65,31 +64,6 @@ io.on('connection', (socket) => {
         console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
     });
 
-    socket.on('publicChatMessage', async (message) => {
-        try {
-            const newMessage = new PublicChat({
-                sender: message.senderUserId,
-                message: message.text
-            });
-            await newMessage.save();
-            io.emit('publicChatMessage', newMessage); // Broadcast to all users for public messages
-        } catch (error) {
-            console.error('Error handling public chat message:', error);
-        }
-    });
-
-    // Inside io.on('connection', (socket) => { ... });
-
-    socket.on('typing', (data) => {
-        socket.to(userSockets[data.receiverUserId]).emit('typing', data.senderUserId);
-    });
-    
-    socket.on('stopTyping', (data) => {
-        socket.to(userSockets[data.receiverUserId]).emit('stopTyping', data.senderUserId);
-    });
-  
-
-    // Handling typing in group chats
     socket.on('groupTyping', async (data) => {
         const group = await Group.findById(data.groupId);
         if (group) {
@@ -117,48 +91,16 @@ io.on('connection', (socket) => {
             });
         }
     });
-        
-    socket.on('chatMessage', async (message) => {
-        try {
-            const newMessage = new Chat({
-                sender: message.senderUserId,
-                receiver: message.receiverUserId,
-                message: message.text,
-                public: message.isPublic // Add this line to handle public messages
-            });
-            await newMessage.save();
-            console.log('Message saved:', newMessage);
-
-            // Check if the message is public and broadcast accordingly
-            if(message.isPublic) {
-                io.emit('publicMessage', newMessage); // Broadcast to all users
-            } else {
-                const receiverSocketId = userSockets[message.receiverUserId];
-                if (receiverSocketId) {
-                    io.to(receiverSocketId).emit('chatMessage', newMessage);
-                }
-            }
-        } catch (error) {
-            console.error('Error handling chat message:', error);
-        }
-    });
-
-    // Inside io.on('connection', (socket) => { ... });
-
+    
     socket.on('groupChatMessage', async (message) => {
         try {
-            // Find the group by its ID
             const group = await Group.findById(message.groupId);
-    
-            // Save the message with a reference to the group
             const newMessage = new Chat({
                 sender: message.senderUserId,
                 message: message.text,
-                group: message.groupId // Assign the group ID
+                group: message.groupId
             });
             await newMessage.save();
-    
-            // Broadcast the message to all members in the group
             group.members.forEach(memberId => {
                 const memberSocketId = userSockets[memberId.toString()];
                 if (memberSocketId) {
@@ -169,21 +111,18 @@ io.on('connection', (socket) => {
             console.error('Error handling group chat message:', error);
         }
     });
-    
 
     socket.on('disconnect', () => {
-        for (const [userId, socketId] of Object.entries(userSockets)) {
-            if (socketId === socket.id) {
+        console.log(`User disconnected: ${socket.id}`);
+        Object.keys(userSockets).forEach(userId => {
+            if (userSockets[userId] === socket.id) {
                 delete userSockets[userId];
-                console.log(`User disconnected: ${userId}`);
-                break;
             }
-        }
+        });
     });
 });
 
-// ... [Rest of your existing server-side code] ...
-
+// Routes and other application logic go here
 
 app.get('/', (req, res) => {
     res.render('home');
@@ -219,17 +158,6 @@ app.post('/signup', async (req, res) => {
         res.status(500).render('signup', { message: 'Internal server error' });
     }
 });
-
-app.get('/get-public-messages', async (req, res) => {
-    try {
-        const messages = await PublicChat.find({}).sort({ timestamp: 1 });
-        res.json(messages.map(message => ({ sender: message.sender, message: message.message })));
-    } catch (error) {
-        console.error('Error fetching public messages:', error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
 
 app.get('/update', (req, res) => {
     // Render the existing "update.pug" template

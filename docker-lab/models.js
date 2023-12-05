@@ -34,8 +34,19 @@ const groupSchema = new mongoose.Schema({
   
   const Group = mongoose.model('Group', groupSchema, 'group');
   
-  module.exports = {
-    User,
-    Chat,
-    Group, // export the Group model
-  };
+ // New schema for public chat messages
+const publicChatSchema = new mongoose.Schema({
+    sender: { type: String, required: true, ref: 'User' },
+    message: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+});
+
+const PublicChat = mongoose.model('PublicChat', publicChatSchema, 'publicChat');
+
+module.exports = {
+  User,
+  Chat,
+  Group,
+  PublicChat // export the PublicChat model
+};
+

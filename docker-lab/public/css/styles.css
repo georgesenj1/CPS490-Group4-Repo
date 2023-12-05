@@ -128,4 +128,9 @@ body {
     box-sizing: border-box; /* Include padding and border in the width */
     color: #333; /* Darken the text color */
   }
-  
+
+  .emoji-picker-container {
+    position: relative; /* adjust positioning if necessary */
+    width: 100%; /* take the full width of the container */
+    margin-top: 20px; /* add some space above the emoji picker */
+  }
