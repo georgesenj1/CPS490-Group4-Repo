@@ -78,6 +78,32 @@ html
             chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
         }
 
+        var typingTimer;
+        var doneTypingInterval = 2000; // 2 seconds
+
+        messageInput.addEventListener('input', () => {
+            clearTimeout(typingTimer);
+            socket.emit('startTyping', { groupId, senderUserId: userId });
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        function doneTyping() {
+            socket.emit('stopTyping', { groupId, senderUserId: userId });
+        }
+
+        socket.on('userTyping', function(data) {
+            if (data.senderUserId !== userId) {
+                typingIndicator.textContent = data.senderUserId + ' is typing...';
+            }
+        });
+
+        socket.on('userStopTyping', function(data) {
+            if (data.senderUserId !== userId) {
+                typingIndicator.textContent = '';
+            }
+        });
+
+
 
         document.querySelector('#emoji-button').addEventListener('click', function() {
           var emojiPicker = document.getElementById('emoji-picker');
@@ -93,3 +119,5 @@ html
           messageInput.value += emoji;
         });
       });
+
+      

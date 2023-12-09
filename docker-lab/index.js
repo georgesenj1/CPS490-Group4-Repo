@@ -85,13 +85,13 @@ io.on('connection', (socket) => {
     });
 
     // Handling typing in group chats
-    socket.on('groupTyping', (data) => {
-        socket.to(data.groupId).broadcast.emit('groupTyping', data.senderUserId);
+    socket.on('startTyping', (data) => {
+        socket.to(data.groupId).emit('userTyping', { senderUserId: data.senderUserId });
     });
 
-    socket.on('groupStopTyping', (data) => {
-        socket.to(data.groupId).broadcast.emit('groupStopTyping', data.senderUserId);
-    });
+    socket.on('stopTyping', (data) => {
+        socket.to(data.groupId).emit('userStopTyping', { senderUserId: data.senderUserId });
+    });    
 
 
     socket.on('typing', (data) => {
