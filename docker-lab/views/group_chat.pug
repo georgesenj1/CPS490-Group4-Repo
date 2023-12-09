@@ -59,55 +59,25 @@ html
           var messageText = messageInput.value.trim();
           if (messageText) {
             socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
-            displayMessage('You', messageText);
             messageInput.value = '';
             doneTyping();
           }
         });
 
         socket.on('groupChatMessage', function(message) {
-          if (message.group === groupId) {
-              displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
-          }
-        });
-
-        var typingTimer;
-        var doneTypingInterval = 1000; // 1 second
-
-        messageInput.addEventListener('input', () => {
-            clearTimeout(typingTimer);
-            socket.emit('groupTyping', { senderUserId: userId, groupId: groupId });
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
-
-        messageInput.addEventListener('blur', () => {
-            clearTimeout(typingTimer);
-            doneTyping();
-        });
-
-        socket.on('groupTyping', function(senderUserId) {
-            if (senderUserId !== userId) {
-                typingIndicator.textContent = senderUserId + ' is typing...';
+            if (message.group === groupId && message.senderUserId !== userId) { // Check if message is not from the current user
+                displayMessage(message.sender, message.message);
             }
         });
-
-        socket.on('groupStopTyping', function(senderUserId) {
-            if (senderUserId !== userId) {
-                typingIndicator.textContent = '';
-            }
-        });
-
-        function doneTyping() {
-          socket.emit('groupStopTyping', { senderUserId: userId, groupId: groupId });
-        }
 
         function displayMessage(sender, message) {
-          var chatMessages = document.getElementById('chat-messages');
-          var messageItem = document.createElement('li');
-          messageItem.textContent = sender + ": " + message;
-          chatMessages.appendChild(messageItem);
-          chatMessages.scrollTop = chatMessages.scrollHeight;
+            var chatMessages = document.getElementById('chat-messages');
+            var messageItem = document.createElement('li');
+            messageItem.textContent = sender + ": " + message;
+            chatMessages.appendChild(messageItem);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
         }
+
 
         document.querySelector('#emoji-button').addEventListener('click', function() {
           var emojiPicker = document.getElementById('emoji-picker');
