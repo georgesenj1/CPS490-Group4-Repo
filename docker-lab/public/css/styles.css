@@ -43,7 +43,21 @@ body {
 .chat-box {
     margin-top: 20px;
     text-align: left;
+    color: black;
 }
+
+.users-list {
+    color: black;
+}
+
+.form-group {
+    color: black;
+}
+
+p.message {
+    color: black; /* Sets the text color to black for paragraphs with class 'message' */
+}
+
 
 ul#public-chat-messages {
     list-style: none;
