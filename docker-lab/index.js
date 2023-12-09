@@ -78,7 +78,21 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Inside io.on('connection', (socket) => { ... });
+    // Register a user in a group when they join
+    socket.on('registerGroup', (groupId, userId) => {
+        socket.join(groupId);
+        console.log(`User ${userId} joined group ${groupId}`);
+    });
+
+    // Handling typing in group chats
+    socket.on('groupTyping', (data) => {
+        socket.to(data.groupId).broadcast.emit('groupTyping', data.senderUserId);
+    });
+
+    socket.on('groupStopTyping', (data) => {
+        socket.to(data.groupId).broadcast.emit('groupStopTyping', data.senderUserId);
+    });
+
 
     socket.on('typing', (data) => {
         socket.to(userSockets[data.receiverUserId]).emit('typing', data.senderUserId);
@@ -87,36 +101,7 @@ io.on('connection', (socket) => {
     socket.on('stopTyping', (data) => {
         socket.to(userSockets[data.receiverUserId]).emit('stopTyping', data.senderUserId);
     });
-  
-
-    // Handling typing in group chats
-    socket.on('groupTyping', async (data) => {
-        const group = await Group.findById(data.groupId);
-        if (group) {
-            group.members.forEach(memberId => {
-                if (memberId.toString() !== data.userId) {
-                    const memberSocketId = userSockets[memberId.toString()];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit('groupTyping', { userId: data.userId, groupId: data.groupId });
-                    }
-                }
-            });
-        }
-    });
-
-    socket.on('groupStopTyping', async (data) => {
-        const group = await Group.findById(data.groupId);
-        if (group) {
-            group.members.forEach(memberId => {
-                if (memberId.toString() !== data.userId) {
-                    const memberSocketId = userSockets[memberId.toString()];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit('groupStopTyping', { userId: data.userId, groupId: data.groupId });
-                    }
-                }
-            });
-        }
-    });
+    
         
     socket.on('chatMessage', async (message) => {
         try {
@@ -147,24 +132,13 @@ io.on('connection', (socket) => {
 
     socket.on('groupChatMessage', async (message) => {
         try {
-            // Find the group by its ID
-            const group = await Group.findById(message.groupId);
-    
-            // Save the message with a reference to the group
             const newMessage = new Chat({
                 sender: message.senderUserId,
                 message: message.text,
-                group: message.groupId // Assign the group ID
+                group: message.groupId
             });
             await newMessage.save();
-    
-            // Broadcast the message to all members in the group
-            group.members.forEach(memberId => {
-                const memberSocketId = userSockets[memberId.toString()];
-                if (memberSocketId) {
-                    io.to(memberSocketId).emit('groupChatMessage', newMessage);
-                }
-            });
+            io.to(message.groupId).emit('groupChatMessage', newMessage); // Broadcasting to the group
         } catch (error) {
             console.error('Error handling group chat message:', error);
         }
@@ -452,28 +426,43 @@ app.post('/create-group', checkSignIn, async (req, res) => {
     }
 });
 
-
-// When the group chat page loads
-app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
+app.get('/create-group', checkSignIn, async (req, res) => {
     try {
-        const { groupId } = req.params;
-        const group = await Group.findById(groupId);
-
-        if (!group) {
-            return res.status(404).send('Group not found');
-        }
-
-        // Fetch messages for this group
-        const messages = await Chat.find({ group: groupId }).sort({ timestamp: 1 });
-
-        // Render the group chat page with the fetched messages
-        res.render('group_chat', { group, messages, userId: req.session.user.id });
+        const users = await User.find({});
+        res.render('create-group', { users });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
 
+// When the group chat page loads
+app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
+    const groupId = req.params.groupId;
+    try {
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(404).send('Group not found');
+        }
+        const messages = await Chat.find({ group: groupId }).sort({ timestamp: 1 }); // Sort oldest to newest
+        res.render('group_chat', { group, messages, userId: req.session.user.id });
+    } catch (error) {
+        console.error('Error loading group chat:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+app.get('/group-chat', checkSignIn, async (req, res) => {
+    try {
+        const groups = await Group.find({}); // Or any criteria for fetching groups
+        res.render('group-chat', { groups });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 app.post('/add-to-group', checkSignIn, async (req, res) => {
@@ -489,6 +478,17 @@ app.post('/add-to-group', checkSignIn, async (req, res) => {
         }
     } catch (error) {
         console.error('Error adding user to group:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/one-on-one-chat', checkSignIn, async (req, res) => {
+    try {
+        const currentUser = req.session.user.id;
+        const users = await User.find({}, 'id');
+        res.render('one-on-one-chat', { users, userId: currentUser });
+    } catch (err) {
+        console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });

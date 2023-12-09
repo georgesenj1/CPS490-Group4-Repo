@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    title One-on-One Chat
+    link(rel="stylesheet" href="/css/styles.css")
+    script(src="/socket.io/socket.io.js")
+    script(type='module' src='https://unpkg.com/emoji-picker-element@latest')
+
+  body
+    .container
+      h1 One-on-One Chat
+
+      // Users List
+      .users-list
+        h2 Users
+        ul
+          each user in users
+            li
+              a(href=`/chat/${user.id}`)= user.id
+
+      // Chat Messages Container
+      .chat-messages
+        ul#chat-messages
+          // Chat messages will be dynamically populated here
+
+        // Emoji Picker Container
+        .emoji-picker-container
+          button#emoji-button Emoji
+          emoji-picker#emoji-picker(style='position: absolute; bottom: 20px; left: 20px; z-index: 1000; display: none;')
+
+        form#chat-form(action="#" method="post")
+          input(type="text" id="message-input" placeholder="Type a message")
+          button(type="submit") Send
+
+    .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+    .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+    .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
+
+    script.
+      var socket = io();
+      var userId = !{JSON.stringify(userId)};
+
+      document.getElementById('emoji-button').addEventListener('click', function() {
+        var emojiPicker = document.getElementById('emoji-picker');
+        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+      });
+
+      var chatForm = document.getElementById('chat-form');
+      var messageInput = document.getElementById('message-input');
+
+      chatForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var messageText = messageInput.value.trim();
+        if (messageText) {
+          socket.emit('chatMessage', { senderUserId: userId, text: messageText });
+          displayMessage('You', messageText);
+          messageInput.value = '';
+        }
+      });
+
+      socket.on('chatMessage', function(message) {
+        displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
+      });
+
+      function displayMessage(sender, message) {
+        var chatMessages = document.getElementById('chat-messages');
+        var messageItem = document.createElement('li');
+        messageItem.textContent = sender + ": " + message;
+        chatMessages.appendChild(messageItem);
+      }

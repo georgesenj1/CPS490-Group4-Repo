@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title Create Group Chat
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body
+    .container
+      h1 Create New Chat Group
+
+      // Group Creation Form
+      form#group-creation-form(action="/create-group" method="post")
+        .form-group
+          label(for="groupName") Group Name:
+          input(type="text" id="groupName" name="groupName" required)
+
+        .form-group
+          h2 Select Members
+          ul.user-checkbox-list
+            each user in users
+              if user.id != userId
+                li
+                  label
+                    input(type="checkbox" name="members" value=user.id)
+                    span= user.id
+
+        button.button(type="submit") Create Group
+
+    .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+    .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+    .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")

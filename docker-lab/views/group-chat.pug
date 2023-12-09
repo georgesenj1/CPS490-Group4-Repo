@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title Group Chats
+    link(rel="stylesheet" href="/css/styles.css")
+
+  body
+    .container
+      h1 Group Chats
+
+      ul.group-list
+        each group in groups
+          li
+            a(href=`/group-chat/${group._id}`)= group.name
