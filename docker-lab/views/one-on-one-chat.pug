@@ -13,10 +13,13 @@ html
       // Users List
       .users-list
         h2 Users
-        ul
-          each user in users
-            li
-              a(href=`/chat/${user.id}`)= user.id
+        // Search input field
+        input(type="text" id="user-search" placeholder="Search users")
+        ul#users-list
+            each user in users
+                li
+                    a(href=`/chat/${user.id}`)= user.id
+
 
       // Chat Messages Container
       .chat-messages
@@ -68,3 +71,19 @@ html
         messageItem.textContent = sender + ": " + message;
         chatMessages.appendChild(messageItem);
       }
+
+      document.getElementById('user-search').addEventListener('input', function(e) {
+        var searchQuery = e.target.value.toLowerCase();
+        var userList = document.getElementById('users-list');
+        var users = userList.getElementsByTagName('li');
+
+        for (var i = 0; i < users.length; i++) {
+            var user = users[i].textContent || users[i].innerText;
+            if (user.toLowerCase().indexOf(searchQuery) > -1) {
+            users[i].style.display = "";
+            } else {
+            users[i].style.display = "none";
+            }
+        }
+        });
+
