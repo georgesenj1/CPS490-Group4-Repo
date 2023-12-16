@@ -1,0 +1,141 @@
+doctype html
+html
+  head
+    title Group Chat: #{group.name}
+    link(rel="stylesheet" href="/css/styles.css")
+    script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
+    style.
+      #chat-messages {
+        list-style-type: none; /* Removes bullet points */
+        padding: 0; /* Removes default padding */
+        max-height: 400px; /* Set a maximum height */
+        overflow-y: auto; /* Add vertical scrolling */
+        margin-bottom: 20px; /* Space between the message list and the typing indicator */
+      }
+      #chat-messages li {
+        background-color: #f0f0f0; /* Light grey background */
+        color: #333; /* Darker text color */
+        border-radius: 10px; /* Rounded corners */
+        padding: 10px; /* Padding inside the container */
+        margin-bottom: 10px; /* Space between messages */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        word-wrap: break-word; /* Prevents long words from overflowing */
+      }
+      #typing-indicator {
+        color: #333; /* Darker shade of grey for the typing indicator */
+      }
+
+  body
+    .sidebar
+      h2 Navigation
+      button.button(onclick="location.href='/one-on-one-chat'") One-on-One Chat
+      button.button(onclick="location.href='/create-group'") Create Group
+      button.button(onclick="location.href='/group-chat'" style="background-color: #4a4a4a; color: #ffffff;") Group Chat
+      button.button(onclick="location.href='/chat'") Public Chat 
+      button.button(onclick="location.href='/logout'") Logout 
+      
+    .container
+      header
+        h1 Group Chat: #{group.name}
+
+      section.chat-area
+        ul#chat-messages
+          each msg in messages
+            li #{msg.sender}: #{msg.message}
+        p#typing-indicator(style="color: grey;")
+
+      .emoji-picker-container
+        button#emoji-button Emoji
+        emoji-picker#emoji-picker(style='position: absolute; bottom: 100px; right: 30px; display: none;')
+
+      section.message-input
+        form#chat-form(action="#" method="post")
+          input(type="text" id="message-input" placeholder="Type a message")
+          button(type="submit") Send
+
+    .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
+    .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
+    .bubble(style="width:120px; height:120px; left:70%; animation-duration:6s;")
+
+    script(src="/socket.io/socket.io.js")
+    script.
+      document.addEventListener('DOMContentLoaded', function () {
+        var socket = io();
+        var groupId = '#{group._id}';
+        var userId = '#{userId}';
+
+        socket.on('connect', () => {
+          socket.emit('registerGroup', groupId, userId);
+        });
+
+        var chatForm = document.getElementById('chat-form');
+        var messageInput = document.getElementById('message-input');
+        var typingIndicator = document.getElementById('typing-indicator');
+
+        chatForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var messageText = messageInput.value.trim();
+          if (messageText) {
+            socket.emit('groupChatMessage', { groupId, senderUserId: userId, text: messageText });
+            messageInput.value = '';
+            doneTyping();
+          }
+        });
+
+        socket.on('groupChatMessage', function(message) {
+            if (message.group === groupId && message.senderUserId !== userId) { // Check if message is not from the current user
+                displayMessage(message.sender, message.message);
+            }
+        });
+
+        function displayMessage(sender, message) {
+            var chatMessages = document.getElementById('chat-messages');
+            var messageItem = document.createElement('li');
+            messageItem.textContent = sender + ": " + message;
+            chatMessages.appendChild(messageItem);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        var typingTimer;
+        var doneTypingInterval = 2000; // 2 seconds
+
+        messageInput.addEventListener('input', () => {
+            clearTimeout(typingTimer);
+            socket.emit('startTyping', { groupId, senderUserId: userId });
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        function doneTyping() {
+            socket.emit('stopTyping', { groupId, senderUserId: userId });
+        }
+
+        socket.on('userTyping', function(data) {
+            if (data.senderUserId !== userId) {
+                typingIndicator.textContent = data.senderUserId + ' is typing...';
+            }
+        });
+
+        socket.on('userStopTyping', function(data) {
+            if (data.senderUserId !== userId) {
+                typingIndicator.textContent = '';
+            }
+        });
+
+
+
+        document.querySelector('#emoji-button').addEventListener('click', function() {
+          var emojiPicker = document.getElementById('emoji-picker');
+          if (emojiPicker.style.display === 'none') {
+            emojiPicker.style.display = 'block';
+          } else {
+            emojiPicker.style.display = 'none';
+          }
+        });
+
+        document.querySelector('#emoji-picker').addEventListener('emoji-click', event => {
+          const emoji = event.detail.emoji.unicode;
+          messageInput.value += emoji;
+        });
+      });
+
+      

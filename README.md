@@ -82,7 +82,11 @@ List user requirements of the project that the team will develop into use cases 
 
 - **Register for Access**
 
+<<<<<<< HEAD
 <img src="images/usecase_user_registration.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_user_registration.png" alt="register" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a new user, I want to register for an account so that I can access the messaging features.
 
@@ -102,12 +106,21 @@ User Case Description: A user navigates to the registration page and inputs a de
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_user_registration.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_user_registration.png" alt="register" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 - **Login**
 
+<<<<<<< HEAD
 <img src="images/usecase_user_login.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_user_login.png" alt="login" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a registered user, I want to log in to access my account and start chatting.
 
@@ -127,13 +140,22 @@ User Case Description: A registered user logs in to the system using their usern
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_user_login.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_user_login.png" alt="login" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
 - **Logout**
 
+<<<<<<< HEAD
 <img src="images/usecase_user_logout.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_user_logout.png" alt="logout" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to securely log out of my account to ensure that my session is closed and my account remains secure.
 
@@ -153,13 +175,22 @@ User Case Description: This use case describes the process through which a logge
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_user_logout.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_user_logout.png" alt="logout" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
 - **Send Message**
 
+<<<<<<< HEAD
 <img src="images/usecase_loggedin_user_send_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_loggedin_user_send_message.png" alt="send mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to send a private message to another user.
 
@@ -179,13 +210,22 @@ User Case Description: Allows a logged-in user to send a 1-1 message to a specif
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_send_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_send_message.png" alt="send mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
 - **Receive Message**
 
+<<<<<<< HEAD
 <img src="images/usecase_loggedin_user_receive_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_loggedin_user_receive_message.png" alt="rec mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to receive and view messages from other users.
 
@@ -205,11 +245,20 @@ User Case Description: This use case allows a logged-in user to receive and read
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_receive_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 - **Send Group Message**
 
 <img src="images/usecase_loggedin_user_send_group_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_receive_message.png" alt="rec mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+- **Send Group Message**
+
+<img src="images/usecase_loggedin_user_send_group_message.png" alt="send group mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to send messages in a group chat.
 
@@ -229,11 +278,20 @@ User Case Description: Enables a user to send messages visible to all members of
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_send_group_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 - **Recieve Group Message**
 
 <img src="images/usecase_loggedin_user_receive_group_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_send_group_message.png" alt="send group mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+- **Recieve Group Message**
+
+<img src="images/usecase_loggedin_user_receive_group_message.png" alt="receive group mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to receive messages from a group chat I am a part of.
 
@@ -253,11 +311,20 @@ User Case Description: Allows users to view messages sent by other members in th
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_receive_group_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 - **Send Public Message**
 
 <img src="images/usecase_loggedin_user_send_publiic_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_receive_group_message.png" alt="recieve group mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+- **Send Public Message**
+
+<img src="images/usecase_loggedin_user_send_publiic_message.png" alt="send pub mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to send messages visible to all users of the application.
 
@@ -277,11 +344,20 @@ User Case Description: Enables users to broadcast messages publicly within the a
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_send_public_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 - **Recieve Public Message**
 
 <img src="images/usecase_loggedin_user_receive_public_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_send_public_message.png" alt="send pub mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+- **Recieve Public Message**
+
+<img src="images/usecase_loggedin_user_receive_public_message.png" alt="recieve pub mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As a logged-in user, I want to view public messages from other users.
 
@@ -301,11 +377,20 @@ User Case Description: Allows users to view messages sent in the public chat roo
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_receive_public_message.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 - **Authorized Users can access the Restricted Page**
 
 <img src="images/usecase_authorizedusers_access_restricted_page.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_receive_public_message.png" alt="Recieve pub mes" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+- **Authorized Users can access the Restricted Page**
+
+<img src="images/usecase_authorizedusers_access_restricted_page.png" alt="Authorized users" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As an authorized user, I want to access restricted areas of the application.
 
@@ -325,13 +410,22 @@ User Case Description: Allows logged-in and verified users to access pages or fe
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_authorizedusers_access_restricted_page.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_authorizedusers_access_restricted_page.png" alt="authorized users" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
 - **Restriction for Unregistered User**
 
+<<<<<<< HEAD
 <img src="images/usecase_unregistered_user_cannot_send_receive_messages.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_unregistered_user_cannot_send_receive_messages.png" alt="unregistered users" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 User Story: As an unregistered user, I cannot send or receive messages.
 
@@ -351,12 +445,18 @@ User Case Description: Prevents unregistered users from accessing messaging feat
 
 
 Sequence Diagram:
+<<<<<<< HEAD
 <img src="images/sequence_unregistered_users_cannot_sendrecieve_messages.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+
+<img src="images/sequence_unregistered_users_cannot_sendrecieve_messages.png" alt="unregistered users" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
 - **Update Information**
 
+<<<<<<< HEAD
 <img src="images/usecase_loggedin_user_update_username_password.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
 User Story: As a logged-in user, I want to update my username and password.
@@ -404,6 +504,57 @@ User Case Description: Enables users to delete their account from the applicatio
 
 Sequence Diagram:
 <img src="images/sequence_account_delete.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+<img src="images/usecase_loggedin_user_update_username_password.png" alt="update" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+User Story: As a logged-in user, I want to update my username and password.
+
+User Case Description: Allows users to update their account information, including username and password.
+
+| TITLE | DESCRIPTION | 
+|----------|:--------:|
+| Use Case Name   |    Update User Information  |    
+| Triggering Event   |  User accesses account update page   | 
+| Brief Description  |   User updates username and password  |  
+| Actor   |  Logged-in User   |  
+| Preconditions  | User is logged in and wants to update information    |  
+| Postconditions   |   User information is updated in the system  |  
+| Flow of Activities   |     |  
+| Actor   | System    |  
+| Inputs new details   |   Updates and confirms changes  |   
+
+
+Sequence Diagram:
+
+<img src="images/sequence_update_username_password.png" alt="suup" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+
+
+- **Account Deletion** 
+
+<img src="images/usecase_loggedin_user_account_deletion.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+User Story: As a logged-in user, I want to permanently delete my account.
+
+User Case Description: Enables users to delete their account from the application permanently.
+
+| TITLE| DESCRIPTION | 
+|----------|:--------:|
+| Use Case Name   |   Account Deletion   |    
+| Triggering Event   |   User chooses to delete account  | 
+| Brief Description  |  User permanently deletes their account   |  
+| Actor   |  Logged-in User   |  
+| Preconditions  |   User is logged in and wishes to delete their account  |  
+| Postconditions   |  User account is permanently removed from the system   |  
+| Flow of Activities   |     |  
+| Actor   | System    |  
+|  Requests account deletion  |  Permanently deletes the account   |   
+
+
+Sequence Diagram:
+
+<img src="images/sequence_account_delete.png" alt="aaccount deletion" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 
 
@@ -474,6 +625,7 @@ const groupSchema = new mongoose.Schema({
     Chat,
     Group, // export the Group model
   };
+<<<<<<< HEAD
 
 ```
 
@@ -481,6 +633,15 @@ const groupSchema = new mongoose.Schema({
 
 <img src="images/userinterphase.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
+=======
+
+```
+
+### **User Interface**
+
+<img src="images/userinterphase.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+>>>>>>> stiffler/master
  - Implemented in a Node.js environment, it leverages Pug templates for rendering the user interface, ensuring a seamless and user-friendly experience.
 
 ### **Implementation**
@@ -941,7 +1102,13 @@ Some applications may require additional configurations, like linking to databas
 
 ### **Software Process Management**
 
+<<<<<<< HEAD
 <img src="images/gantt diagram.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+=======
+#### **Gantt Chart Sprint 1**
+
+<img src="images/gantt diagram.png" alt="gantt diagram 1" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
 
 ### **Scrum Process**
 
@@ -1041,6 +1208,13 @@ To exit the system, click the "Logout" button. You will be taken to the login pa
 
 #### **Sprint 2**
 
+<<<<<<< HEAD
+=======
+#### **Gantt Chart Sprint 2**
+
+<img src="images/Gantt.png" alt="Gantt chart" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+>>>>>>> stiffler/master
 Duration: 10/20/2023-10/31/2023
 
 #### **Use Cases:**
@@ -1124,6 +1298,7 @@ Node.js facilitated robust server-side functionality, while Pug enabled us to re
 
 
 - **1-1 Chat**
+<<<<<<< HEAD
 
 <img src="images/1-1.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
 
@@ -1168,3 +1343,56 @@ Group chat allows for topic-specific conversations with multiple participants.
 Enter a group name and add users by their usernames.
 Click "Create" to establish your new group chat.
 
+=======
+
+<img src="images/1-1.png" alt="one on one chat" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+1. Accessing 1-1 Chat:
+
+Navigate to the "Chat" section after logging in.
+Choose a user from the list to initiate a private conversation.
+
+2. Using 1-1 Chat:
+
+Type your message in the text box and press "Send" to communicate with the selected user.
+Your chat history will be displayed on the screen, allowing for easy reference to past conversations.
+
+- **Public Chat**
+
+<img src="images/public.png" alt="public chat" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+1. Participating in Public Chat:
+
+Enter your message in the provided field and click "Send" to share it with all online users.
+Public messages are ideal for broad announcements or community discussions.
+
+- **Group Chat**
+
+<img src="images/group.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+1. Joining a Group Chat:
+
+Access the "Groups" section to see a list of available group chats.
+Click on a group name to enter the chat room.
+
+2. Engaging in Group Chat:
+
+Similar to 1-1 chat, type your message and hit "Send".
+Group chat allows for topic-specific conversations with multiple participants.
+
+- **How to Create a Group:**
+
+<img src="images/creategroup.png" alt="create group" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+1. Navigate to the "Create Group" option.
+Enter a group name and add users by their usernames.
+Click "Create" to establish your new group chat.
+
+## Sprint 2 Commits
+
+<img src="images/commit1.png" alt="commit 1" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+<img src="images/commit2.png" alt="commit 2" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+
+<img src="images/commit3.png" alt="commit 3" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
+>>>>>>> stiffler/master
