@@ -60,10 +60,12 @@ const userSockets = {};
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('registerUser', (userId) => {
+    socket.on('registerUser', async (userId) => {
         userSockets[userId] = socket.id;
+        await User.updateOne({ id: userId }, { online: true });
+        io.emit('userStatusChanged', { userId, online: true });
         console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
-    });
+    });    
 
     socket.on('publicChatMessage', async (message) => {
         try {
@@ -146,15 +148,16 @@ io.on('connection', (socket) => {
     
     
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         for (const [userId, socketId] of Object.entries(userSockets)) {
             if (socketId === socket.id) {
+                await User.updateOne({ id: userId }, { online: false });
+                io.emit('userStatusChanged', { userId, online: false });
                 delete userSockets[userId];
-                console.log(`User disconnected: ${userId}`);
                 break;
             }
         }
-    });
+    });    
 });
 
 // ... [Rest of your existing server-side code] ...
@@ -302,7 +305,10 @@ app.post('/login', async (req, res) => {
             if (result) { // If the passwords match
                 req.session.user = { id };
                 req.session.socketId = req.sessionID; // Store the socket ID in the session
+                
                 await User.updateOne({ id }, { online: true }); // Set user online
+                io.emit('userStatusChanged', { userId: id, online: true }); // Emit status change
+                
                 return res.redirect('/protected_page');
             } else {
                 res.render('login', { message: 'Invalid credentials!' });
@@ -397,11 +403,13 @@ app.get('/search', async (req, res) => {
 
 app.get('/logout', async (req, res) => {
     if (req.session.user) {
-      await User.updateOne({ id: req.session.user.id }, { online: false }); // Set user offline
-      delete req.session.user;
+        const userId = req.session.user.id;
+        await User.updateOne({ id: userId }, { online: false });
+        io.emit('userStatusChanged', { userId, online: false });
+        delete req.session.user;
     }
     res.redirect('/login');
-  });
+});
 
 
 app.get('/protected_page', checkSignIn, (req, res) => {
