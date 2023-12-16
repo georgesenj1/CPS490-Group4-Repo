@@ -82,11 +82,7 @@ List user requirements of the project that the team will develop into use cases 
 
 - **Register for Access**
 
-<<<<<<< HEAD
-<img src="images/usecase_user_registration.png" alt="User Interface" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
-=======
 <img src="images/usecase_user_registration.png" alt="register" style="padding: 0px 0px 0px 20px; max-width: 100%; height: auto;">
->>>>>>> stiffler/master
 
 User Story: As a new user, I want to register for an account so that I can access the messaging features.
 
