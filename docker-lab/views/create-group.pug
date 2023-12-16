@@ -3,14 +3,36 @@ html
   head
     title Create Group Chat
     link(rel="stylesheet" href="/css/styles.css")
+    style.
+      .user-checkbox-list {
+        list-style-type: none; /* Removes bullet points */
+        padding: 0; /* Removes default padding */
+        max-height: 300px; /* Set a maximum height */
+        overflow-y: auto; /* Add vertical scrolling */
+        margin-bottom: 20px; /* Space below the list */
+      }
+      .user-checkbox-list li {
+        background-color: #f0f0f0; /* Light grey background */
+        color: #333; /* Darker text color */
+        border-radius: 10px; /* Rounded corners */
+        padding: 10px; /* Padding inside the container */
+        margin-bottom: 10px; /* Space between list items */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        display: flex; /* Flex layout for aligning checkbox and label */
+        align-items: center; /* Center items vertically */
+      }
+      .user-checkbox-list label {
+        margin-left: 10px; /* Space between checkbox and label */
+      }
 
   body
-
     .sidebar
       h2 Navigation
       button.button(onclick="location.href='/one-on-one-chat'") One-on-One Chat
-      button.button(onclick="location.href='/create-group'") Create Group
+      button.button(onclick="location.href='/create-group'" style="background-color: #4a4a4a; color: #ffffff;") Create Group
       button.button(onclick="location.href='/group-chat'") Group Chat
+      button.button(onclick="location.href='/chat'") Public Chat 
+      button.button(onclick="location.href='/logout'") Logout 
       
     .container
       h1 Create New Chat Group
