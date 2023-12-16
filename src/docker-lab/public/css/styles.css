@@ -6,64 +6,89 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #2d3436; /* Changed the background to the dark shade for bubbles effect */
-    overflow: hidden;
+    background-color: #2d3436; /* Dark shade for background */
     color: #dfe6e9;
+    overflow: hidden;
 }
 
-/* Targeting the <p> elements inside .container class to darken the text */
-.container p {
-    color: #333;  /* Using a darker shade of grey. You can adjust as needed. */
+.sidebar {
+    width: 200px;
+    background-color: #34495e; /* Darker shade for sidebar */
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 2px solid #2c3e50;
 }
 
-/* If you specifically want to target only the message paragraph, you can add a class to it in your Pug template, e.g., .message-text, and then style it in your CSS: */
-.message-text {
-    color: #333;
+.sidebar h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .container {
+    flex-grow: 1;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    max-width: 600px;
+    margin-left: 20px;
     text-align: center;
 }
 
 .container h1 {
-    color: #2c3e50;  /* Darker shade */
+    color: #2c3e50; /* Darker shade for headers */
+}
+
+.chat-box {
+    margin-top: 20px;
+    text-align: left;
+    color: black;
+}
+
+.users-list {
+    color: black;
+}
+
+.form-group {
+    color: black;
+}
+
+p.message {
+    color: black; /* Sets the text color to black for paragraphs with class 'message' */
+}
+
+
+ul#public-chat-messages {
+    list-style: none;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+ul#public-chat-messages li {
+    background: #ecf0f1;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
 }
 
 .button {
-    display: block;
-    background-color: #1877f2; /* Facebook blue */
+    background-color: #2980b9; /* Blue shade */
     color: white;
     padding: 10px 20px;
-    margin-left: auto;
-    margin-right: auto;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
 }
-.button + .button {
-    margin-top: 10px;
-}
-
-.input-spacing {
-    margin-bottom: 20px;
-}
-
-
-
-.button-space {
-    margin-top: 10px;
-}
-
-
 
 .button:hover {
-    background-color: #165dbb;
+    background-color: #1b73a4; /* Slightly darker blue */
 }
 
 /* Bubbles styles */
@@ -83,54 +108,3 @@ body {
         transform: translateY(-100vh);
     }
 }
-
-.delete-button {
-    background-color: #e74c3c; /* red */
-    border: none;
-    border-radius: 4px;
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.delete-button:hover {
-    background-color: #c0392b; /* darker red */
-}
-
-.delete-form {
-    margin-top: 10px;  /* adjust this value as needed */
-}
-
-.chat-boxes-container {
-    display: flex; /* Use flexbox for layout */
-    justify-content: space-between; /* Space evenly between the boxes */
-  }
-  
-  /* Style for the main white box */
-  .main-box {
-    width: 80%; /* Increase the width as needed */
-    padding: 20px; /* Adjust padding as needed */
-    background-color: white; /* Ensure it has a white background */
-    box-sizing: border-box; /* Include padding and border in the width */
-    color: #333; /* Darken the text color */
-  }
-  
-  /* Style for each individual box */
-  .chat-box {
-    width: 22%; /* Adjust the width as needed */
-    padding: 10px;
-    border: 1px solid #ccc; /* Add a border for separation */
-    margin-right: 10px; /* Add margin to create space between boxes */
-    box-sizing: border-box; /* Include padding and border in the width */
-    color: #333; /* Darken the text color */
-  }
-
-  .emoji-picker-container {
-    position: relative; /* adjust positioning if necessary */
-    width: 100%; /* take the full width of the container */
-    margin-top: 20px; /* add some space above the emoji picker */
-  }

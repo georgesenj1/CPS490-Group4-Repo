@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer();
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { User, Chat, Group } = require('./models'); // Import the Chat model
+const { User, Chat, Group, PublicChat } = require('./models'); // Import the Chat model
 const http = require('http'); // Import the 'http' module
 const server = http.createServer(app); // Create an HTTP server
 const io = require('socket.io')(server); // Set up Socket.io
@@ -60,12 +60,41 @@ const userSockets = {};
 io.on('connection', (socket) => {
     console.log('A user connected');
 
-    socket.on('registerUser', (userId) => {
+    socket.on('registerUser', async (userId) => {
         userSockets[userId] = socket.id;
+        await User.updateOne({ id: userId }, { online: true });
+        io.emit('userStatusChanged', { userId, online: true });
         console.log(`User registered: ${userId} with socket ID: ${socket.id}`);
+    });    
+
+    socket.on('publicChatMessage', async (message) => {
+        try {
+            const newMessage = new PublicChat({
+                sender: message.senderUserId,
+                message: message.text
+            });
+            await newMessage.save();
+            io.emit('publicChatMessage', newMessage); // Broadcast to all users for public messages
+        } catch (error) {
+            console.error('Error handling public chat message:', error);
+        }
     });
 
-    // Inside io.on('connection', (socket) => { ... });
+    // Register a user in a group when they join
+    socket.on('registerGroup', (groupId, userId) => {
+        socket.join(groupId);
+        console.log(`User ${userId} joined group ${groupId}`);
+    });
+
+    // Handling typing in group chats
+    socket.on('startTyping', (data) => {
+        socket.to(data.groupId).emit('userTyping', { senderUserId: data.senderUserId });
+    });
+
+    socket.on('stopTyping', (data) => {
+        socket.to(data.groupId).emit('userStopTyping', { senderUserId: data.senderUserId });
+    });    
+
 
     socket.on('typing', (data) => {
         socket.to(userSockets[data.receiverUserId]).emit('typing', data.senderUserId);
@@ -74,34 +103,17 @@ io.on('connection', (socket) => {
     socket.on('stopTyping', (data) => {
         socket.to(userSockets[data.receiverUserId]).emit('stopTyping', data.senderUserId);
     });
-  
-
-    // Handling typing in group chats
-    socket.on('groupTyping', async (data) => {
-        const group = await Group.findById(data.groupId);
-        if (group) {
-            group.members.forEach(memberId => {
-                if (memberId.toString() !== data.userId) {
-                    const memberSocketId = userSockets[memberId.toString()];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit('groupTyping', { userId: data.userId, groupId: data.groupId });
-                    }
-                }
-            });
-        }
-    });
-
-    socket.on('groupStopTyping', async (data) => {
-        const group = await Group.findById(data.groupId);
-        if (group) {
-            group.members.forEach(memberId => {
-                if (memberId.toString() !== data.userId) {
-                    const memberSocketId = userSockets[memberId.toString()];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit('groupStopTyping', { userId: data.userId, groupId: data.groupId });
-                    }
-                }
-            });
+    
+    socket.on('thumbsUp', async (messageText) => {
+        try {
+            const message = await PublicChat.findOne({ message: messageText });
+            if (message) {
+                message.thumbsUp += 1;
+                await message.save();
+                io.emit('messageUpdated', message);
+            }
+        } catch (error) {
+            console.error('Error handling thumbs-up:', error);
         }
     });
         
@@ -134,39 +146,30 @@ io.on('connection', (socket) => {
 
     socket.on('groupChatMessage', async (message) => {
         try {
-            // Find the group by its ID
-            const group = await Group.findById(message.groupId);
-    
-            // Save the message with a reference to the group
             const newMessage = new Chat({
                 sender: message.senderUserId,
                 message: message.text,
-                group: message.groupId // Assign the group ID
+                group: message.groupId
             });
             await newMessage.save();
-    
-            // Broadcast the message to all members in the group
-            group.members.forEach(memberId => {
-                const memberSocketId = userSockets[memberId.toString()];
-                if (memberSocketId) {
-                    io.to(memberSocketId).emit('groupChatMessage', newMessage);
-                }
-            });
+            io.to(message.groupId).emit('groupChatMessage', newMessage); // Broadcasting to the group
         } catch (error) {
             console.error('Error handling group chat message:', error);
         }
     });
     
+    
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         for (const [userId, socketId] of Object.entries(userSockets)) {
             if (socketId === socket.id) {
+                await User.updateOne({ id: userId }, { online: false });
+                io.emit('userStatusChanged', { userId, online: false });
                 delete userSockets[userId];
-                console.log(`User disconnected: ${userId}`);
                 break;
             }
         }
-    });
+    });    
 });
 
 // ... [Rest of your existing server-side code] ...
@@ -206,6 +209,17 @@ app.post('/signup', async (req, res) => {
         res.status(500).render('signup', { message: 'Internal server error' });
     }
 });
+
+app.get('/get-public-messages', async (req, res) => {
+    try {
+        const messages = await PublicChat.find({}).sort({ timestamp: 1 });
+        res.json(messages.map(message => ({ sender: message.sender, message: message.message })));
+    } catch (error) {
+        console.error('Error fetching public messages:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/update', (req, res) => {
     // Render the existing "update.pug" template
@@ -294,7 +308,7 @@ app.post('/login', async (req, res) => {
 
     if (user) {
         // Compare hashed password with the provided password
-        bcrypt.compare(password, user.password, (err, result) => {
+        bcrypt.compare(password, user.password, async (err, result) => {
             if (err) {
                 console.error('Error comparing the passwords:', err);
                 return res.status(500).send('Internal server error');
@@ -303,6 +317,10 @@ app.post('/login', async (req, res) => {
             if (result) { // If the passwords match
                 req.session.user = { id };
                 req.session.socketId = req.sessionID; // Store the socket ID in the session
+                
+                await User.updateOne({ id }, { online: true }); // Set user online
+                io.emit('userStatusChanged', { userId: id, online: true }); // Emit status change
+                
                 return res.redirect('/protected_page');
             } else {
                 res.render('login', { message: 'Invalid credentials!' });
@@ -312,6 +330,7 @@ app.post('/login', async (req, res) => {
         res.render('login', { message: 'Invalid credentials!' });
     }
 });
+
 
 app.get('/chat', checkSignIn, async (req, res) => {
     try {
@@ -394,8 +413,13 @@ app.get('/search', async (req, res) => {
     }
 });
 
-app.get('/logout', (req, res) => {
-    delete req.session.user;
+app.get('/logout', async (req, res) => {
+    if (req.session.user) {
+        const userId = req.session.user.id;
+        await User.updateOne({ id: userId }, { online: false });
+        io.emit('userStatusChanged', { userId, online: false });
+        delete req.session.user;
+    }
     res.redirect('/login');
 });
 
@@ -428,28 +452,43 @@ app.post('/create-group', checkSignIn, async (req, res) => {
     }
 });
 
-
-// When the group chat page loads
-app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
+app.get('/create-group', checkSignIn, async (req, res) => {
     try {
-        const { groupId } = req.params;
-        const group = await Group.findById(groupId);
-
-        if (!group) {
-            return res.status(404).send('Group not found');
-        }
-
-        // Fetch messages for this group
-        const messages = await Chat.find({ group: groupId }).sort({ timestamp: 1 });
-
-        // Render the group chat page with the fetched messages
-        res.render('group_chat', { group, messages, userId: req.session.user.id });
+        const users = await User.find({});
+        res.render('create-group', { users });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
 
+// When the group chat page loads
+app.get('/group-chat/:groupId', checkSignIn, async (req, res) => {
+    const groupId = req.params.groupId;
+    try {
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(404).send('Group not found');
+        }
+        const messages = await Chat.find({ group: groupId }).sort({ timestamp: 1 }); // Sort oldest to newest
+        res.render('group_chat', { group, messages, userId: req.session.user.id });
+    } catch (error) {
+        console.error('Error loading group chat:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+app.get('/group-chat', checkSignIn, async (req, res) => {
+    try {
+        const groups = await Group.find({}); // Or any criteria for fetching groups
+        res.render('group-chat', { groups });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 app.post('/add-to-group', checkSignIn, async (req, res) => {
@@ -468,6 +507,12 @@ app.post('/add-to-group', checkSignIn, async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+app.get('/one-on-one-chat', checkSignIn, async (req, res) => {
+    const currentUser = req.session.user.id;
+    const users = await User.find({}, 'id online'); // Fetch users with online status
+    res.render('one-on-one-chat', { users, userId: currentUser });
+  });
 
 app.get('/get-group-messages', checkSignIn, async (req, res) => {
     const { groupId } = req.query;

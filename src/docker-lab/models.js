@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   // Add a field to reference chats related to this user
   chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],
+  online: { type: Boolean, default: false }, 
 });
 
 const User = mongoose.model('User', userSchema, 'user'); // Forces the collection name to 'user'
@@ -34,8 +35,20 @@ const groupSchema = new mongoose.Schema({
   
   const Group = mongoose.model('Group', groupSchema, 'group');
   
-  module.exports = {
-    User,
-    Chat,
-    Group, // export the Group model
-  };
+ // New schema for public chat messages
+const publicChatSchema = new mongoose.Schema({
+    sender: { type: String, required: true, ref: 'User' },
+    message: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now },
+    thumbsUp: { type: Number, default: 0 } 
+});
+
+const PublicChat = mongoose.model('PublicChat', publicChatSchema, 'publicChat');
+
+module.exports = {
+  User,
+  Chat,
+  Group,
+  PublicChat // export the PublicChat model
+};
+
