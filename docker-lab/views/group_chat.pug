@@ -5,14 +5,33 @@ html
     link(rel="stylesheet" href="/css/styles.css")
     script(src='https://unpkg.com/emoji-picker-element@latest' type='module')
     style.
+      #chat-messages {
+        list-style-type: none; /* Removes bullet points */
+        padding: 0; /* Removes default padding */
+        max-height: 400px; /* Set a maximum height */
+        overflow-y: auto; /* Add vertical scrolling */
+        margin-bottom: 20px; /* Space between the message list and the typing indicator */
+      }
       #chat-messages li {
-        color: #000; /* Sets the text color to black */
+        background-color: #f0f0f0; /* Light grey background */
+        color: #333; /* Darker text color */
+        border-radius: 10px; /* Rounded corners */
+        padding: 10px; /* Padding inside the container */
+        margin-bottom: 10px; /* Space between messages */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        word-wrap: break-word; /* Prevents long words from overflowing */
       }
       #typing-indicator {
         color: #333; /* Darker shade of grey for the typing indicator */
       }
 
   body
+    .sidebar
+      h2 Navigation
+      button.button(onclick="location.href='/one-on-one-chat'") One-on-One Chat
+      button.button(onclick="location.href='/create-group'") Create Group
+      button.button(onclick="location.href='/group-chat'") Group Chat
+      
     .container
       header
         h1 Group Chat: #{group.name}
