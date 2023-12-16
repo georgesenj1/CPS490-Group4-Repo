@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   // Add a field to reference chats related to this user
   chats: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Chat' }],
+  online: { type: Boolean, default: false }, 
 });
 
 const User = mongoose.model('User', userSchema, 'user'); // Forces the collection name to 'user'

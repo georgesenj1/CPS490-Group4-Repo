@@ -19,6 +19,9 @@ html
             each user in users
                 li
                     a(href=`/chat/${user.id}`)= user.id
+                    if user.online
+                        span(style="color: green;") ●
+
 
 
       // Chat Messages Container

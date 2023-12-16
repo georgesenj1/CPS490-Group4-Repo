@@ -293,7 +293,7 @@ app.post('/login', async (req, res) => {
 
     if (user) {
         // Compare hashed password with the provided password
-        bcrypt.compare(password, user.password, (err, result) => {
+        bcrypt.compare(password, user.password, async (err, result) => {
             if (err) {
                 console.error('Error comparing the passwords:', err);
                 return res.status(500).send('Internal server error');
@@ -302,6 +302,7 @@ app.post('/login', async (req, res) => {
             if (result) { // If the passwords match
                 req.session.user = { id };
                 req.session.socketId = req.sessionID; // Store the socket ID in the session
+                await User.updateOne({ id }, { online: true }); // Set user online
                 return res.redirect('/protected_page');
             } else {
                 res.render('login', { message: 'Invalid credentials!' });
@@ -311,6 +312,7 @@ app.post('/login', async (req, res) => {
         res.render('login', { message: 'Invalid credentials!' });
     }
 });
+
 
 app.get('/chat', checkSignIn, async (req, res) => {
     try {
@@ -393,10 +395,13 @@ app.get('/search', async (req, res) => {
     }
 });
 
-app.get('/logout', (req, res) => {
-    delete req.session.user;
+app.get('/logout', async (req, res) => {
+    if (req.session.user) {
+      await User.updateOne({ id: req.session.user.id }, { online: false }); // Set user offline
+      delete req.session.user;
+    }
     res.redirect('/login');
-});
+  });
 
 
 app.get('/protected_page', checkSignIn, (req, res) => {
@@ -484,15 +489,10 @@ app.post('/add-to-group', checkSignIn, async (req, res) => {
 });
 
 app.get('/one-on-one-chat', checkSignIn, async (req, res) => {
-    try {
-        const currentUser = req.session.user.id;
-        const users = await User.find({}, 'id');
-        res.render('one-on-one-chat', { users, userId: currentUser });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
-});
+    const currentUser = req.session.user.id;
+    const users = await User.find({}, 'id online'); // Fetch users with online status
+    res.render('one-on-one-chat', { users, userId: currentUser });
+  });
 
 app.get('/get-group-messages', checkSignIn, async (req, res) => {
     const { groupId } = req.query;
