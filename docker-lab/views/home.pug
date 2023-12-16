@@ -1,15 +1,57 @@
 doctype html
 html
     head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
         title Home
-        h1 Deployed with Docker
-        link(rel="stylesheet" href="/css/styles.css")  
-        script(src="/js/script.js" defer)         
+        link(rel="stylesheet" href="/css/styles.css")
+        script(src="/js/script.js" defer)
+        style.
+            .centered {
+                text-align: center;
+                margin-top: 50px;
+            }
+            .button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .signup-link {
+                display: block;
+                margin-top: 20px;
+            }
+            .card {
+                display: inline-block;
+                margin: 10px;
+                padding: 20px;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                transition: transform 0.3s, box-shadow 0.3s;
+                color: #333; /* Darker text */
+            }
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            .bubble {
+                border-radius: 50%;
+                background-color: #add8e6;
+                position: fixed;
+                opacity: 0.5;
+            }
+
     body
-        .container
+        .container.centered
             h1 Welcome to the Home Page
-            button.button(onclick="location.href='/signup'") Signup
             button.button(onclick="location.href='/login'") Login
+            a.signup-link(href="/signup") Don't have an account? Sign up
+
+            //- Cards with hover effect and sample messages
+            .card
+                h3 New Messaging Features
+                p Explore our latest messaging app updates - now with enhanced security and intuitive design.
+            .card
+                h3 Stay Connected
+                p With our app, staying in touch has never been easier. Enjoy seamless communication with friends and family.
 
         //- Bubbles for aesthetics
         .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")

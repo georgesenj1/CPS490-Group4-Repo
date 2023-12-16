@@ -4,7 +4,6 @@ html
     title One-on-One Chat
     link(rel="stylesheet" href="/css/styles.css")
     script(src="/socket.io/socket.io.js")
-    script(type='module' src='https://unpkg.com/emoji-picker-element@latest')
 
   body
     .container
@@ -23,25 +22,12 @@ html
                         if user.online
                             | ● Online
                         else
-                            | ● Offline
-
-
-
-
+                            | 
 
       // Chat Messages Container
       .chat-messages
         ul#chat-messages
           // Chat messages will be dynamically populated here
-
-        // Emoji Picker Container
-        .emoji-picker-container
-          button#emoji-button Emoji
-          emoji-picker#emoji-picker(style='position: absolute; bottom: 20px; left: 20px; z-index: 1000; display: none;')
-
-        form#chat-form(action="#" method="post")
-          input(type="text" id="message-input" placeholder="Type a message")
-          button(type="submit") Send
 
     .bubble(style="width:100px; height:100px; left:10%; animation-duration:4s;")
     .bubble(style="width:60px; height:60px; left:20%; animation-duration:5s;")
@@ -54,52 +40,27 @@ html
         socket.on('userStatusChanged', function(data) {
             var userElement = document.getElementById('user-status-' + data.userId);
             if (userElement) {
-            userElement.style.color = data.online ? 'green' : 'red';
-            userElement.textContent = data.online ? '● Online' : '● Offline';
+                userElement.style.color = data.online ? 'green' : 'red';
+                userElement.textContent = data.online ? '● Online' : '● Offline';
             }
         });
 
-      document.getElementById('emoji-button').addEventListener('click', function() {
-        var emojiPicker = document.getElementById('emoji-picker');
-        emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
-      });
+        var chatForm = document.getElementById('chat-form');
 
-      var chatForm = document.getElementById('chat-form');
-      var messageInput = document.getElementById('message-input');
+        // Remove the chat form event listener and other associated JavaScript
+        // as it's no longer needed with the removal of the chat form
 
-      chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var messageText = messageInput.value.trim();
-        if (messageText) {
-          socket.emit('chatMessage', { senderUserId: userId, text: messageText });
-          displayMessage('You', messageText);
-          messageInput.value = '';
-        }
-      });
+        document.getElementById('user-search').addEventListener('input', function(e) {
+            var searchQuery = e.target.value.toLowerCase();
+            var userList = document.getElementById('users-list');
+            var users = userList.getElementsByTagName('li');
 
-      socket.on('chatMessage', function(message) {
-        displayMessage(message.sender === userId ? 'You' : message.sender, message.message);
-      });
-
-      function displayMessage(sender, message) {
-        var chatMessages = document.getElementById('chat-messages');
-        var messageItem = document.createElement('li');
-        messageItem.textContent = sender + ": " + message;
-        chatMessages.appendChild(messageItem);
-      }
-
-      document.getElementById('user-search').addEventListener('input', function(e) {
-        var searchQuery = e.target.value.toLowerCase();
-        var userList = document.getElementById('users-list');
-        var users = userList.getElementsByTagName('li');
-
-        for (var i = 0; i < users.length; i++) {
-            var user = users[i].textContent || users[i].innerText;
-            if (user.toLowerCase().indexOf(searchQuery) > -1) {
-            users[i].style.display = "";
-            } else {
-            users[i].style.display = "none";
+            for (var i = 0; i < users.length; i++) {
+                var user = users[i].textContent || users[i].innerText;
+                if (user.toLowerCase().indexOf(searchQuery) > -1) {
+                    users[i].style.display = "";
+                } else {
+                    users[i].style.display = "none";
+                }
             }
-        }
         });
-
